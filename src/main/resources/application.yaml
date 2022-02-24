@@ -17,9 +17,9 @@ logging:
           repository: debug
 
 server:
-  port: 4455
+  port: 5678
   servlet:
-    context-path: /class_selection
+    context-path: /api/v1
 
 pagehelper:
   helperDialect: mysql
