@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @Component
@@ -19,5 +18,4 @@ public class Order {
     private Timestamp payTime;
     private Integer state;
     private Integer waiterId;
-    private List<OrderItem> orderItemList;
 }
