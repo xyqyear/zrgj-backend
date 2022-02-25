@@ -21,13 +21,13 @@ public class AccountController {
     AccountService accountService;
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public Object helloTest(Map<String, String> body) {
+    public Object helloTest(@RequestBody Map<String, String> body) {
         System.out.println("hello world");
         return "hello";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<Object> authenticate(Map<String, String> body) {
+    public ResponseEntity<Object> authenticate(@RequestBody Map<String, String> body) {
         ResultMap result = accountService.authenticate(body.get("username"), body.get("password"));
         return ResponseWrapper.wrap(result);
     }
@@ -38,22 +38,28 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteAccount(@RequestBody Account account) {
-        // TODO:
-        return null;
+    public ResponseEntity<Object> deleteAccount(@RequestBody Map<String, String> body) {
+        return ResponseWrapper.wrap(accountService.deleteAccount(body.get("username")));
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<Object> updateAccount(@RequestBody Account account) {
-        // TODO:
-        return null;
+        return ResponseWrapper.wrap(accountService.updateAccount(account));
 
     }
 
-    @RequestMapping(value ="/change_password", method = RequestMethod.DELETE)
+    @RequestMapping(value ="/change_password", method = RequestMethod.PUT)
     public ResponseEntity<Object> changePassword(@RequestBody Account account) {
-        // TODO:
-        return null;
+        return ResponseWrapper.wrap(accountService.changePassword(account));
+    }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<Object> getAccountInfo(@RequestBody Map<String, String> body) {
+        return ResponseWrapper.wrap(accountService.getAccountInfo(body.get("username")));
+    }
+
+    @RequestMapping(value ="/list",method = RequestMethod.GET)
+    public ResponseEntity<Object> getAccountList(@RequestBody Map<String, String> body) {
+        return ResponseWrapper.wrap(accountService.getAccountList(body.get("restaurantId")));
     }
 }
