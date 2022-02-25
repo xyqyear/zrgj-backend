@@ -19,4 +19,6 @@ public interface DishMapper {
     List<Dish> getDishList(String restaurantId);
 
     Dish getDishByName(Dish dish);
+
+    Dish getDishById(Integer id);
 }
