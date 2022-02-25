@@ -6,8 +6,11 @@ import zrgj.order_everyday.entity.Account;
 import zrgj.order_everyday.mapper.AccountMapper;
 import zrgj.order_everyday.pojo.dto.ResultMap;
 import zrgj.order_everyday.util.Encryption;
+import zrgj.order_everyday.util.JWTUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AccountService {
@@ -25,8 +28,9 @@ public class AccountService {
         if (! encryptedPassword.equals(user.getPassword())){
             return ResultMap.failure("wrong password");
         }
-        user.setPassword("就不告诉你");
-        return ResultMap.success(user);
+        Map<String, String> map = new HashMap<>();
+        map.put("token", JWTUtil.createToken(user));
+        return ResultMap.success(map);
     }
 
     public ResultMap addNewAccount(Account account) {
