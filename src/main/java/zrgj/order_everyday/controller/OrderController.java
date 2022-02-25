@@ -22,6 +22,7 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping()
+    @SuppressWarnings("unchecked")
     public ResponseEntity<Object> order(@RequestBody Map<String, Object> body) {
         return ResponseWrapper.wrap(orderService.newOrder((Integer) body.get("tableId"),
                 (List<Map<String, Object>>) body.get("orderItems")));
