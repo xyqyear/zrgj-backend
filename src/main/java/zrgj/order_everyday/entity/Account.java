@@ -16,4 +16,5 @@ public class Account {
     private String password;
     private String restaurantId;
     private String avatarUrl;
+    private Boolean deleted = false;
 }

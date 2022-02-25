@@ -2,6 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="zrgj.order_everyday.mapper.DishMapper">
 
+    <insert id="addNewDish" parameterType="zrgj.order_everyday.entity.Dish">
+        insert into dish (name, price, image_url, category, restaurant_id)
+        values (#{name}, #{price}, #{imageUrl}, #{category}, #{restaurantId})
+    </insert>
 
+    <update id="deleteDish" parameterType="java.lang.String">
+        update dish
+        set deleted= true
+        where id = #{id}
+    </update>
+
+    <update id="updateDish" parameterType="zrgj.order_everyday.entity.Dish">
+        update dish
+        set name=#{name},
+            price=#{price},
+            image_url=#{imageUrl},
+            category=#{category}
+        where id = #{id}
+    </update>
+
+    <select id="getDishList" parameterType="java.lang.String"
+            resultType="zrgj.order_everyday.entity.Dish">
+        select id, name, price, image_url, category, restaurant_id
+        from dish
+        where restaurant_id = #{restaurantId}
+          and deleted = false
+    </select>
+
+    <select id="getDishByName" parameterType="zrgj.order_everyday.entity.Dish"
+            resultType="zrgj.order_everyday.entity.Dish">
+        select *
+        from dish
+        where deleted = false
+          and name = #{name}
+          and restaurant_id = #{restaurantId}
+    </select>
 
 </mapper>

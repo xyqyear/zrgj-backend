@@ -27,11 +27,11 @@
         where username = #{username}
     </update>
 
-    <delete id="deleteAccount" parameterType="java.lang.String">
-        delete
-        from account
+    <update id="deleteAccount" parameterType="java.lang.String">
+        update account
+        set deleted= true
         where username = #{username}
-    </delete>
+    </update>
 
     <select id="getAccountList" parameterType="java.lang.String"
             resultType="zrgj.order_everyday.entity.Account">
