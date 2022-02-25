@@ -16,5 +16,4 @@ public class Dish {
     private String imageUrl;
     private String category;
     private Integer restaurantId;
-    private Boolean deleted = false;
 }
