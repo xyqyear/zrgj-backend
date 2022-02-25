@@ -18,4 +18,5 @@ public class Order {
     private Timestamp payTime;
     private Integer state;
     private Integer waiterId;
+    private Integer restaurantId;
 }

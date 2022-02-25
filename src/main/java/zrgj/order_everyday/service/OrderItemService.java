@@ -24,8 +24,7 @@ public class OrderItemService {
     // update order item
     public ResultMap updateOrderItem(OrderItem orderItem) {
         // update by id, state, dishId, amount and note
-        orderItemMapper.updateOrderItem(orderItem.getId(), orderItem.getState(), orderItem.getDishId(),
-                orderItem.getAmount(), orderItem.getNote());
+        orderItemMapper.updateOrderItem(orderItem);
         return ResultMap.success(null);
     }
 

@@ -17,7 +17,7 @@ public interface OrderItemMapper {
     // create order item
     @Insert("INSERT INTO `order_item` (`dish_id`, `state`, `amount`, `note`, `order_id`) VALUES (#{dishId}, #{state}, #{amount}, #{note}, #{orderId})")
     @Options(useGeneratedKeys=true, keyProperty="id")
-    Integer createOrderItem(Integer dishId, Integer state, Integer amount, String note, Integer orderId);
+    Integer createOrderItem(OrderItem orderItem);
 
     // get order item by id
     @Select("SELECT * FROM `order_item` WHERE `id` = #{id}")
@@ -31,9 +31,17 @@ public interface OrderItemMapper {
     @Select("SELECT * FROM `order_item` WHERE `order_id` = #{orderId}")
     List<OrderItem> getOrderItemsByOrderId(Integer orderId);
 
+    // get order items by order id and state is 1
+    @Select("SELECT * FROM `order_item` WHERE `order_id` = #{orderId} AND `state` = 1")
+    List<OrderItem> getUncompletedOrderItemsByOrderId(Integer orderId);
+
+    // get order items by order id and state is 0
+    @Select("SELECT * FROM `order_item` WHERE `order_id` = #{orderId} AND `state` = 0")
+    List<OrderItem> getCompletedOrderItemsByOrderId(Integer orderId);
+
     // update order item with state, dishId, amount and note
     @Update("UPDATE `order_item` SET `state` = #{state}, `dish_id` = #{dishId}, `amount` = #{amount}, `note` = #{note} WHERE `id` = #{id}")
-    void updateOrderItem(Integer id, Integer state, Integer dishId, Integer amount, String note);
+    void updateOrderItem(OrderItem orderItem);
 
     // set state to -1
     @Update("UPDATE `order_item` SET `state` = -1 WHERE `id` = #{id}")

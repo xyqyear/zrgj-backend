@@ -17,7 +17,7 @@ import zrgj.order_everyday.entity.Order;
 public interface OrderMapper {
     @Insert("INSERT INTO `order` (`table_id`, `create_time`, `state`, `waiter_id`, `restaurant_id`) VALUES (#{tableId}, #{createTime}, #{state}, #{waiterId}, #{restaurantId})")
     @Options(useGeneratedKeys=true, keyProperty="id")
-    Integer createOrder(Integer tableId, Timestamp createTime, Integer state, Integer waiterId, Integer restaurantId);
+    void createOrder(Order order);
 
     // get order by id union get total price by id
     @Select("SELECT * FROM `order` WHERE `id` = #{orderId}")
@@ -32,6 +32,6 @@ public interface OrderMapper {
     void updateOrder(Integer id, Integer state, Timestamp payTime);
 
     // select orders in a range
-    @Select("SELECT * FROM `order` WHERE `create_time` >= #{start} AND `create_time` <= #{end}")
-    List<Order> getOrdersInRange(Timestamp start, Timestamp end);
+    @Select("SELECT * FROM `order` WHERE `create_time` >= #{from} AND `create_time` <= #{to}")
+    List<Order> getOrdersInRange(Timestamp from, Timestamp to);
 }

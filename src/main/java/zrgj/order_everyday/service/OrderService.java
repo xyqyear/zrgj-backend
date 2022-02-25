@@ -30,11 +30,19 @@ public class OrderService {
     DishMapper dishMapper;
 
     public ResultMap newOrder(Integer tableId, List<Map<String, Object>> orderItems) {
-        int orderId = orderMapper.createOrder(tableId, new Timestamp(System.currentTimeMillis()), 1, null,
-                null);
+        Order order = new Order();
+        order.setTableId(tableId);
+        order.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        order.setState(1);
+        orderMapper.createOrder(order);
         for (Map<String, Object> orderItem : orderItems) {
-            orderItemMapper.createOrderItem((Integer) orderItem.get("dishId"), 1, (Integer) orderItem.get("amount"),
-                    (String) orderItem.get("note"), orderId);
+            OrderItem orderItemEntity = new OrderItem();
+            orderItemEntity.setDishId((Integer) orderItem.get("dishId"));
+            orderItemEntity.setAmount((Integer) orderItem.get("amount"));
+            orderItemEntity.setNote((String) orderItem.get("note"));
+            orderItemEntity.setState(1);
+            orderItemEntity.setOrderId(order.getId());
+            orderItemMapper.createOrderItem(orderItemEntity);
         }
 
         return ResultMap.success(null);
@@ -44,6 +52,12 @@ public class OrderService {
         Order order = orderMapper.getOrderById(orderId);
         order.setState(0);
         order.setPayTime(new Timestamp(System.currentTimeMillis()));
+        // get order items by order id
+        List<OrderItem> orderItems = orderItemMapper.getUncompletedOrderItemsByOrderId(orderId);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.setState(-1);
+            orderItemMapper.updateOrderItem(orderItem);
+        }
         this.updateOrder(order);
         return ResultMap.success(null);
     }
@@ -66,10 +80,10 @@ public class OrderService {
             List<OrderItem> orderItems = orderItemMapper.getOrderItemsByOrderId(order.getId());
             int totalPrice = 0;
             for (OrderItem orderItem : orderItems) {
-                Dish dish = dishMapper.getDishById(orderItem.getDishId());
-                totalPrice += orderItem.getAmount() * dish.getPrice();
-                orderItem.setOrderId(null);
-                orderItem.setCookId(null);
+                if (orderItem.getState() == 0) {
+                    Dish dish = dishMapper.getDishById(orderItem.getDishId());
+                    totalPrice += orderItem.getAmount() * dish.getPrice();
+                }
             }
             orderMap.put("orderItems", orderItems);
             orderMap.put("totalPrice", totalPrice);
@@ -93,10 +107,10 @@ public class OrderService {
             List<OrderItem> orderItems = orderItemMapper.getOrderItemsByOrderId(order.getId());
             int totalPrice = 0;
             for (OrderItem orderItem : orderItems) {
-                Dish dish = dishMapper.getDishById(orderItem.getDishId());
-                totalPrice += orderItem.getAmount() * dish.getPrice();
-                orderItem.setOrderId(null);
-                orderItem.setCookId(null);
+                if (orderItem.getState() == 0) {
+                    Dish dish = dishMapper.getDishById(orderItem.getDishId());
+                    totalPrice += orderItem.getAmount() * dish.getPrice();
+                }
             }
             orderMap.put("orderItems", orderItems);
             orderMap.put("totalPrice", totalPrice);

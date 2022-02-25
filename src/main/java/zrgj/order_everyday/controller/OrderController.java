@@ -38,8 +38,9 @@ public class OrderController {
         return ResponseWrapper.wrap(orderService.getOngoingOrders());
     }
 
+    // TODO not working
     @GetMapping("/range")
     public ResponseEntity<Object> getOrdersInTimeRange(@RequestBody Map<String, Integer> body) {
-        return ResponseWrapper.wrap(orderService.getOrdersInRange(body.get("start"), body.get("end")));
+        return ResponseWrapper.wrap(orderService.getOrdersInRange(body.get("from"), body.get("to")));
     }
 }
