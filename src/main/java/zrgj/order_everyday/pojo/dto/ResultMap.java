@@ -10,10 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResultMap {
-    private Boolean code;
+    private Boolean success;
 
     private String reason;
     
     private Object data;
 
+    public ResultMap failure(String reason) {
+        return ResultMap.builder().success(false).reason(reason).build();
+    }
 }
