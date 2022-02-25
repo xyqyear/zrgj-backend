@@ -16,7 +16,11 @@ public class ResultMap {
     
     private Object data;
 
-    public ResultMap failure(String reason) {
+    public static ResultMap failure(String reason) {
         return ResultMap.builder().success(false).reason(reason).build();
+    }
+
+    public static ResultMap success(Object data){
+        return ResultMap.builder().success(true).data(data).build();
     }
 }

@@ -9,4 +9,5 @@ import zrgj.order_everyday.entity.Account;
 public interface AccountMapper {
     Account getAccountByUsername(String username);
 
+    Integer addNewAccount(Account account);
 }
