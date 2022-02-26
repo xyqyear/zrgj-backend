@@ -88,4 +88,14 @@ public class JWTUtil {
             return null;
         }
     }
+
+    /**
+     * 获得token中的信息，无需secret解密也能获得
+     *
+     * @return token中包含的用户名
+     */
+    public static Map<String, Claim> getClaimsFromHeader(String token) {
+        token = token.substring(7);
+        return getClaims(token);
+    }
 }
