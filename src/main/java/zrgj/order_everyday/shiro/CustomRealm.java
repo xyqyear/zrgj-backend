@@ -45,7 +45,6 @@ public class CustomRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.println("————身份认证方法————");
         String token = authenticationToken.getCredentials().toString();
         // 解密获得username，用于和数据库进行对比
         Map<String, Claim> info = JWTUtil.getClaims(token);
@@ -60,7 +59,6 @@ public class CustomRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        System.out.println("————权限认证————");
         Map<String, Claim> userinfo = JWTUtil.getClaims(principals.toString());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //获得该用户角色

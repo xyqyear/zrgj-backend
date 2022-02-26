@@ -35,7 +35,6 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws UnauthorizedException {
         HttpServletRequest req = (HttpServletRequest) request;
         String uri = req.getRequestURI();
-        System.out.println(uri);
         if (!uri.equals(contextPath + "/account/login")) {
             //如果存在，则进入 executeLogin 方法执行登入，检查 token 是否正确
             try {
@@ -58,11 +57,10 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String token = httpServletRequest.getHeader("Authorization");
-        if (token.startsWith("Bearer ")){
+        if (!token.startsWith("Bearer ")){
             throw new IllegalAccessException("the authorization method is not JWT");
         }
         token = token.substring(7);
-        System.out.println(token);
         JWTToken jwtToken = new JWTToken(token);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
         getSubject(request, response).login(jwtToken);
