@@ -20,6 +20,6 @@ public class FileService {
         } catch (IOException e) {
             return ResultMap.failure("upload failed: " + e.getMessage());
         }
-        return ResultMap.success(Map.of("fileUrl", BASE_URL + fileName + fileExtension));
+        return ResultMap.success(Map.of("fileUrl", BASE_URL + fileName + "." + fileExtension));
     }
 }
