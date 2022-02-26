@@ -1,6 +1,5 @@
 package zrgj.order_everyday.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +28,13 @@ public class OrderService {
     @Autowired
     DishMapper dishMapper;
 
-    public ResultMap newOrder(Integer tableId, List<Map<String, Object>> orderItems) {
+    public ResultMap newOrder(Integer tableId, Integer waiterId, Integer restaurantId,
+            List<Map<String, Object>> orderItems) {
         Order order = new Order();
         order.setTableId(tableId);
-        order.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        order.setWaiterId(waiterId);
+        order.setRestaurantId(restaurantId);
+        order.setCreateTime((int) (System.currentTimeMillis() / 1000));
         order.setState(1);
         orderMapper.createOrder(order);
         for (Map<String, Object> orderItem : orderItems) {
@@ -51,8 +53,7 @@ public class OrderService {
     public ResultMap checkout(Integer orderId) {
         Order order = orderMapper.getOrderById(orderId);
         order.setState(0);
-        order.setPayTime(new Timestamp(System.currentTimeMillis()));
-        // get order items by order id
+        order.setPayTime((int) (System.currentTimeMillis() / 1000));
         List<OrderItem> orderItems = orderItemMapper.getUncompletedOrderItemsByOrderId(orderId);
         for (OrderItem orderItem : orderItems) {
             orderItem.setState(-1);
@@ -67,9 +68,9 @@ public class OrderService {
         return ResultMap.success(null);
     }
 
-    public ResultMap getOngoingOrders() {
+    public ResultMap getOngoingOrders(Integer restaurantId) {
         List<Map<String, Object>> orders = new ArrayList<>();
-        List<Order> ongoingOrders = orderMapper.getOngoingOrders();
+        List<Order> ongoingOrders = orderMapper.getOngoingOrders(restaurantId);
         for (Order order : ongoingOrders) {
             Map<String, Object> orderMap = new HashMap<>();
             orderMap.put("id", order.getId());
@@ -80,7 +81,7 @@ public class OrderService {
             List<OrderItem> orderItems = orderItemMapper.getOrderItemsByOrderId(order.getId());
             int totalPrice = 0;
             for (OrderItem orderItem : orderItems) {
-                if (orderItem.getState() == 0) {
+                if (orderItem.getState() != -1) {
                     Dish dish = dishMapper.getDishById(orderItem.getDishId());
                     totalPrice += orderItem.getAmount() * dish.getPrice();
                 }
@@ -92,11 +93,9 @@ public class OrderService {
         return ResultMap.success(orders);
     }
 
-    public ResultMap getOrdersInRange(Integer start, Integer end) {
-        Timestamp startTimestamp = new Timestamp(start);
-        Timestamp endTimestamp = new Timestamp(end);
+    public ResultMap getOrdersInRange(Integer restaurantId, Integer start, Integer end) {
         List<Map<String, Object>> orders = new ArrayList<>();
-        List<Order> ordersInRange = orderMapper.getOrdersInRange(startTimestamp, endTimestamp);
+        List<Order> ordersInRange = orderMapper.getOrdersInRange(restaurantId, start, end);
         for (Order order : ordersInRange) {
             Map<String, Object> orderMap = new HashMap<>();
             orderMap.put("id", order.getId());
