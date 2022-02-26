@@ -23,9 +23,9 @@ public interface OrderItemMapper {
     @Select("SELECT * FROM `order_item` WHERE `id` = #{id}")
     OrderItem getOrderItemById(Integer id);
 
-    // get order items the state of which is 1
-    @Select("SELECT * FROM `order_item` WHERE `state` = 1")
-    List<OrderItem> getUncompletedOrderItems();
+    // get order items with state 1 and belong to an order from restaurandId
+    @Select("SELECT * FROM `order_item` WHERE `state` = 1 AND `order_id` IN (SELECT `id` FROM `order` WHERE `restaurant_id` = #{restaurantId})")
+    List<OrderItem> getUncompletedOrderItems(Integer restaurantId);
 
     // get order items by order id
     @Select("SELECT * FROM `order_item` WHERE `order_id` = #{orderId}")

@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
-
 @Data
 @Component
 @AllArgsConstructor
@@ -14,8 +12,8 @@ import java.sql.Timestamp;
 public class Order {
     private Integer id;
     private Integer tableId;
-    private Timestamp createTime;
-    private Timestamp payTime;
+    private Integer createTime;
+    private Integer payTime;
     private Integer state;
     private Integer waiterId;
     private Integer restaurantId;

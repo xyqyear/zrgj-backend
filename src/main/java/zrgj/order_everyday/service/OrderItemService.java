@@ -16,14 +16,13 @@ public class OrderItemService {
     OrderItemMapper orderItemMapper;
 
     // get uncompleted order items
-    public ResultMap getUncompletedOrderItems() {
-        List<OrderItem> orderItems = orderItemMapper.getUncompletedOrderItems();
+    public ResultMap getUncompletedOrderItems(Integer restaurantId) {
+        List<OrderItem> orderItems = orderItemMapper.getUncompletedOrderItems(restaurantId);
         return ResultMap.success(orderItems);
     }
 
     // update order item
     public ResultMap updateOrderItem(OrderItem orderItem) {
-        // update by id, state, dishId, amount and note
         orderItemMapper.updateOrderItem(orderItem);
         return ResultMap.success(null);
     }
