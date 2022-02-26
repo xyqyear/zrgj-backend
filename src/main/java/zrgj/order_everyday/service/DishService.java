@@ -38,11 +38,7 @@ public class DishService {
         return ResultMap.success(null);
     }
 
-    public ResultMap getDishList(String restaurantId) {
-//        Restaurant restaurant =restaurantMapper.getRestaurantById(restaurantId);
-//        if (restaurant == null) {
-//            return ResultMap.failure("this restaurant doesn't exist");
-//        }
+    public ResultMap getDishList(Integer restaurantId) {
         return ResultMap.success(dishMapper.getDishList(restaurantId));
     }
 }

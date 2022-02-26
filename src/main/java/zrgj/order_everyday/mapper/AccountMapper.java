@@ -19,5 +19,5 @@ public interface AccountMapper {
 
     Integer deleteAccount(String username);
 
-    List<Account> getAccountList(String restaurantId);
+    List<Account> getAccountList(Integer restaurantId);
 }

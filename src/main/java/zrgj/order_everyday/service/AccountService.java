@@ -72,7 +72,7 @@ public class AccountService {
         return ResultMap.success(null);
     }
 
-    public ResultMap getAccountList(String restaurantId) {
+    public ResultMap getAccountList(Integer restaurantId) {
         List<Account> employees = accountMapper.getAccountList(restaurantId);
         return ResultMap.success(employees);
     }

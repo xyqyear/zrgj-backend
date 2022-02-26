@@ -33,7 +33,7 @@
         where username = #{username}
     </update>
 
-    <select id="getAccountList" parameterType="java.lang.String"
+    <select id="getAccountList" parameterType="java.lang.Integer"
             resultType="zrgj.order_everyday.entity.Account">
         select id, username, position, avatar_url, restaurant_id
         from account

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import zrgj.order_everyday.entity.Dish;
 import zrgj.order_everyday.service.DishService;
+import zrgj.order_everyday.util.JWTUtil;
 import zrgj.order_everyday.util.ResponseWrapper;
 
 import java.util.Map;
@@ -21,6 +22,7 @@ public class DishController {
     @RequiresRoles("0")
     public ResponseEntity<Object> addNewDish(@RequestBody Dish dish,
                                              @RequestHeader("Authorization") String token) {
+        dish.setRestaurantId(JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt());
         return ResponseWrapper.wrap(dishService.addNewDish(dish));
     }
 
@@ -39,8 +41,8 @@ public class DishController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<Object> getDishList(@RequestBody Map<String, String> body,
-                                              @RequestHeader("Authorization") String token) {
-        return ResponseWrapper.wrap(dishService.getDishList(body.get("restaurantId")));
+    public ResponseEntity<Object> getDishList(@RequestHeader("Authorization") String token) {
+        Integer restaurantId=JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
+        return ResponseWrapper.wrap(dishService.getDishList(restaurantId));
     }
 }

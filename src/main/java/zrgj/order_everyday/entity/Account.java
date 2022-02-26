@@ -16,6 +16,6 @@ public class Account {
     private Integer position;
     @JsonIgnore
     private String password;
-    private String restaurantId;
+    private Integer restaurantId;
     private String avatarUrl;
 }

@@ -16,7 +16,7 @@ public interface DishMapper {
 
     Integer updateDish(Dish dish);
 
-    List<Dish> getDishList(String restaurantId);
+    List<Dish> getDishList(Integer restaurantId);
 
     Dish getDishByName(Dish dish);
 

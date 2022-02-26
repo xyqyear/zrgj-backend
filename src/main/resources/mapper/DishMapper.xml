@@ -22,7 +22,7 @@
         where id = #{id}
     </update>
 
-    <select id="getDishList" parameterType="java.lang.String"
+    <select id="getDishList" parameterType="java.lang.Integer"
             resultType="zrgj.order_everyday.entity.Dish">
         select id, name, price, image_url, category, restaurant_id
         from dish
