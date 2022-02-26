@@ -10,6 +10,7 @@ import zrgj.order_everyday.entity.Account;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,7 +25,7 @@ public class JWTUtil {
     // 过期时间 24 小时
     private static final long EXPIRE_TIME = 60 * 24 * 60 * 1000;
     // 密钥
-    private static final String SECRET = "SHIRO+JWT";
+    private static final String SECRET = "order_everyday_v1";
 
     /**
      * 生成 token, 24h后过期
@@ -41,12 +42,13 @@ public class JWTUtil {
                     .withClaim("username", account.getUsername())
                     .withClaim("position", account.getPosition())
                     .withClaim("restaurantId", account.getRestaurantId())
+                    .withClaim("userId", account.getId())
                     //到期时间
                     .withExpiresAt(date)
                     //创建一个新的JWT，并使用给定的算法进行标记
                     .sign(algorithm);
         } catch (UnsupportedEncodingException e) {
-            return null;
+            return "failure in creating jwt token";
         }
     }
 
@@ -65,6 +67,7 @@ public class JWTUtil {
                     .withClaim("username", info.get("username").asString())
                     .withClaim("position", info.get("position").asInt())
                     .withClaim("restaurantId", info.get("restaurantId").asInt())
+                    .withClaim("userId", info.get("userId").asInt())
                     .build();
             //验证 token
             verifier.verify(token);
@@ -85,7 +88,7 @@ public class JWTUtil {
             return jwt.getClaims();
         } catch (JWTDecodeException e) {
             e.printStackTrace();
-            return null;
+            return new HashMap<String, Claim>();
         }
     }
 }

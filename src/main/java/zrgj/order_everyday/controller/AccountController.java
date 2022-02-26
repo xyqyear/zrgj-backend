@@ -4,10 +4,7 @@ package zrgj.order_everyday.controller;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import zrgj.order_everyday.entity.Account;
 import zrgj.order_everyday.pojo.dto.ResultMap;
 import zrgj.order_everyday.service.AccountService;
@@ -35,37 +32,43 @@ public class AccountController {
 
     @RequestMapping(method = RequestMethod.POST)
     @RequiresRoles("0")
-    public ResponseEntity<Object> addNewAccount(@RequestBody Account account) {
+    public ResponseEntity<Object> addNewAccount(@RequestBody Account account,
+                                                @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(accountService.addNewAccount(account));
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     @RequiresRoles("0")
-    public ResponseEntity<Object> deleteAccount(@RequestBody Map<String, String> body) {
+    public ResponseEntity<Object> deleteAccount(@RequestBody Map<String, String> body,
+                                                @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(accountService.deleteAccount(body.get("username")));
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @RequiresRoles("0")
-    public ResponseEntity<Object> updateAccount(@RequestBody Account account) {
+    public ResponseEntity<Object> updateAccount(@RequestBody Account account,
+                                                @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(accountService.updateAccount(account));
     }
 
     @RequestMapping(value ="/change_password", method = RequestMethod.PUT)
     @RequiresRoles("0")
-    public ResponseEntity<Object> changePassword(@RequestBody Account account) {
+    public ResponseEntity<Object> changePassword(@RequestBody Account account,
+                                                 @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(accountService.changePassword(account));
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @RequiresRoles("0")
-    public ResponseEntity<Object> getAccountInfo(@RequestBody Map<String, String> body) {
+    public ResponseEntity<Object> getAccountInfo(@RequestBody Map<String, String> body,
+                                                 @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(accountService.getAccountInfo(body.get("username")));
     }
 
     @RequestMapping(value ="/list",method = RequestMethod.GET)
     @RequiresRoles("0")
-    public ResponseEntity<Object> getAccountList(@RequestBody Map<String, String> body) {
+    public ResponseEntity<Object> getAccountList(@RequestBody Map<String, String> body,
+                                                 @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(accountService.getAccountList(body.get("restaurantId")));
     }
 }

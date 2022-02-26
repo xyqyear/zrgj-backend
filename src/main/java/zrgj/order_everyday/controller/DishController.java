@@ -1,12 +1,10 @@
 package zrgj.order_everyday.controller;
 
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import zrgj.order_everyday.entity.Dish;
 import zrgj.order_everyday.service.DishService;
 import zrgj.order_everyday.util.ResponseWrapper;
@@ -20,22 +18,29 @@ public class DishController {
     DishService dishService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Object> addNewDish(@RequestBody Dish dish) {
+    @RequiresRoles("0")
+    public ResponseEntity<Object> addNewDish(@RequestBody Dish dish,
+                                             @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(dishService.addNewDish(dish));
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteDish(@RequestBody Map<String, String> body) {
+    @RequiresRoles("0")
+    public ResponseEntity<Object> deleteDish(@RequestBody Map<String, String> body,
+                                             @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(dishService.deleteDish(body.get("id")));
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<Object> updateDish(@RequestBody Dish dish) {
+    @RequiresRoles("0")
+    public ResponseEntity<Object> updateDish(@RequestBody Dish dish,
+                                             @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(dishService.updateDish(dish));
     }
 
-    @RequestMapping(value = "/all",method = RequestMethod.GET)
-    public ResponseEntity<Object> getDishList(@RequestBody Map<String, String> body) {
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public ResponseEntity<Object> getDishList(@RequestBody Map<String, String> body,
+                                              @RequestHeader("Authorization") String token) {
         return ResponseWrapper.wrap(dishService.getDishList(body.get("restaurantId")));
     }
 }

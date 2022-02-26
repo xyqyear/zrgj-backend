@@ -26,7 +26,6 @@ import java.net.URLEncoder;
 public class JWTFilter extends BasicHttpAuthenticationFilter {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    //    @Value("${server.servlet.context-path}")
     private String contextPath = "/api/v1";
 
     /**
@@ -51,17 +50,6 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         return true;
     }
 
-    /**
-     * 判断用户是否想要登入。
-     * 检测 header 里面是否包含 Token 字段
-     */
-/*    @Override
-    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
-        HttpServletRequest req = (HttpServletRequest) request;
-        String uri = req.getRequestURI();
-        System.out.println(uri);
-        return uri.equals(contextPath + "/account/login");
-    }*/
 
     /**
      * 执行登陆操作
@@ -71,8 +59,9 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String token = httpServletRequest.getHeader("Authorization");
         if (token.startsWith("Bearer ")){
-            token = token.substring(7);
+            throw new IllegalAccessException("the authorization method is not JWT");
         }
+        token = token.substring(7);
         System.out.println(token);
         JWTToken jwtToken = new JWTToken(token);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
