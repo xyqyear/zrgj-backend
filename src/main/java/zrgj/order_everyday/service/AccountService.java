@@ -28,8 +28,9 @@ public class AccountService {
         if (! encryptedPassword.equals(user.getPassword())){
             return ResultMap.failure("wrong password");
         }
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("token", JWTUtil.createToken(user));
+        map.put("account", user);
         return ResultMap.success(map);
     }
 
