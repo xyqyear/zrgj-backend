@@ -7,14 +7,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import zrgj.order_everyday.pojo.dto.ResultMap;
 import zrgj.order_everyday.shiro.JWTToken;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
-import java.net.URLEncoder;
 
 /**
  * @Author yuanhaoyue swithaoy@gmail.com
@@ -57,7 +61,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String token = httpServletRequest.getHeader("Authorization");
-        if (!token.startsWith("Bearer ")){
+        if (token == null || !token.startsWith("Bearer ")){
             throw new IllegalAccessException("the authorization method is not JWT");
         }
         token = token.substring(7);
@@ -92,9 +96,9 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     private void responseError(ServletResponse response, String message) {
         try {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-            //设置编码，否则中文字符在重定向时会变为空字符串
-            message = URLEncoder.encode(message, "UTF-8");
-            httpServletResponse.sendRedirect("/unauthorized/" + message);
+            httpServletResponse.setContentType("application/json");
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString(ResultMap.failure(message)));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
