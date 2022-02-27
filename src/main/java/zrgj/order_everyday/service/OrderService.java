@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import zrgj.order_everyday.entity.Dish;
 import zrgj.order_everyday.entity.Order;
 import zrgj.order_everyday.entity.OrderItem;
+import zrgj.order_everyday.entity.Restaurant;
 import zrgj.order_everyday.mapper.DishMapper;
 import zrgj.order_everyday.mapper.OrderItemMapper;
 import zrgj.order_everyday.mapper.OrderMapper;
+import zrgj.order_everyday.mapper.RestaurantMapper;
 import zrgj.order_everyday.pojo.dto.ResultMap;
 
 @Service
@@ -28,23 +30,39 @@ public class OrderService {
     @Autowired
     DishMapper dishMapper;
 
+    @Autowired
+    RestaurantMapper restaurantMapper;
+
     public ResultMap newOrder(Integer tableId, Integer waiterId, Integer restaurantId,
             List<Map<String, Object>> orderItems) {
         Order order = new Order();
+        Restaurant restaurant = restaurantMapper.getRestaurantById(restaurantId);
+        if (tableId > restaurant.getTableNum()) {
+            return ResultMap.failure("invalid table id");
+        }
         order.setTableId(tableId);
         order.setWaiterId(waiterId);
         order.setRestaurantId(restaurantId);
         order.setCreateTime((int) (System.currentTimeMillis() / 1000));
         order.setState(1);
         orderMapper.createOrder(order);
+        Integer i = 0;
         for (Map<String, Object> orderItem : orderItems) {
             OrderItem orderItemEntity = new OrderItem();
+            if ((Integer) orderItem.get("amount") < 1) {
+                return ResultMap.failure("amount must be positive integer");
+            }
             orderItemEntity.setDishId((Integer) orderItem.get("dishId"));
             orderItemEntity.setAmount((Integer) orderItem.get("amount"));
             orderItemEntity.setNote((String) orderItem.get("note"));
             orderItemEntity.setState(1);
             orderItemEntity.setOrderId(order.getId());
-            orderItemMapper.createOrderItem(orderItemEntity);
+            try{
+                orderItemMapper.createOrderItem(orderItemEntity);
+            } catch (Exception e) {
+                return ResultMap.failure("invalid dish in orderItems[" + i + "]");
+            }
+            i++;
         }
 
         return ResultMap.success(null);
