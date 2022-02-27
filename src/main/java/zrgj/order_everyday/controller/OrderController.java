@@ -24,7 +24,7 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @PostMapping()
+    @PostMapping("/add")
     @SuppressWarnings("unchecked")
     public ResponseEntity<Object> order(@RequestHeader("Authorization") String token,
             @RequestBody Map<String, Object> body) {
@@ -35,18 +35,18 @@ public class OrderController {
                 (List<Map<String, Object>>) body.get("orderItems")));
     }
 
-    @PutMapping("/checkout")
+    @PostMapping("/checkout")
     public ResponseEntity<Object> checkout(@RequestBody Map<String, Integer> body) {
         return ResponseWrapper.wrap(orderService.checkout((Integer) body.get("orderId")));
     }
 
-    @GetMapping("/ongoing")
+    @PostMapping("/ongoing")
     public ResponseEntity<Object> getOngoingOrders(@RequestHeader("Authorization") String token) {
         int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
         return ResponseWrapper.wrap(orderService.getOngoingOrders(restaurantId));
     }
 
-    @GetMapping("/range")
+    @PostMapping("/range")
     public ResponseEntity<Object> getOrdersInTimeRange(@RequestHeader("Authorization") String token,
             @RequestBody Map<String, Integer> body) {
         int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -21,19 +22,19 @@ public class OrderItemController {
     @Autowired
     OrderItemService orderItemService;
 
-    @GetMapping("/uncompleted")
+    @PostMapping("/uncompleted")
     public ResponseEntity<Object> getUncompletedOrderItems(@RequestHeader("Authorization") String token) {
         int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
         return ResponseWrapper.wrap(orderItemService.getUncompletedOrderItems(restaurantId));
     }
 
-    @PutMapping()
+    @PostMapping("/update")
     public ResponseEntity<Object> updateOrderItem(@RequestBody OrderItem orderItem) {
         System.out.println(orderItem.getState());
         return ResponseWrapper.wrap(orderItemService.updateOrderItem(orderItem));
     }
 
-    @DeleteMapping()
+    @PostMapping("/delete")
     public ResponseEntity<Object> deleteOrderItem(@RequestBody Integer orderItemId) {
         return ResponseWrapper.wrap(orderItemService.deleteOrderItem(orderItemId));
     }
