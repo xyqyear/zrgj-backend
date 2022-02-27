@@ -64,7 +64,7 @@ public class OrderService {
     }
 
     public ResultMap updateOrder(Order order) {
-        orderMapper.updateOrder(order.getId(), order.getState(), order.getPayTime());
+        orderMapper.updateOrder(order);
         return ResultMap.success(null);
     }
 

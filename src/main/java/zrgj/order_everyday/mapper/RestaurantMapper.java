@@ -12,6 +12,6 @@ public interface RestaurantMapper {
     @Select("SELECT * FROM `restaurant` WHERE `id` = #{id}")
     Restaurant getRestaurantById(Integer id);
 
-    @Update("UPDATE `restaurant` SET `name` = #{name}, `address` = #{address}, `telephone` = #{telephone} WHERE `id` = #{id}")
-    void updateRestaurant(Integer id, String name, String address, String telephone);
+    @Update("UPDATE `restaurant` SET `name` = #{name}, `address` = #{address}, `telephone` = #{telephone}, `table_num` = #{tableNum} WHERE `id` = #{id}")
+    void updateRestaurant(Restaurant restaurant);
 }

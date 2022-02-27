@@ -18,7 +18,7 @@ public class RestaurantService {
     }
 
     public ResultMap updateRestaurantInfo(Restaurant restaurant) {
-        restaurantMapper.updateRestaurant(restaurant.getId(), restaurant.getName(), restaurant.getAddress(), restaurant.getTelephone());
+        restaurantMapper.updateRestaurant(restaurant);
         return ResultMap.success(null);
     }
 }

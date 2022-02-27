@@ -28,7 +28,7 @@ public interface OrderMapper {
 
     //update with state and payTime
     @Update("UPDATE `order` SET `state` = #{state}, `pay_time` = #{payTime} WHERE `id` = #{id}")
-    void updateOrder(Integer id, Integer state, Integer payTime);
+    void updateOrder(Order order);
 
     // select orders in a range
     @Select("SELECT * FROM `order` WHERE `create_time` >= #{from} AND `create_time` <= #{to} AND `restaurant_id` = #{restaurantId}")
