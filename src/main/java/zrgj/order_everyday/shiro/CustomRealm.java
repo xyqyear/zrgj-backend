@@ -48,8 +48,8 @@ public class CustomRealm extends AuthorizingRealm {
         String token = authenticationToken.getCredentials().toString();
         // 解密获得username，用于和数据库进行对比
         Map<String, Claim> info = JWTUtil.getClaims(token);
-        if (info.get("username").asString() == null || !JWTUtil.verify(token, info)) {
-            throw new AuthenticationException("token认证失败！");
+        if (!JWTUtil.verify(token, info)) {
+            throw new AuthenticationException("invalid token");
         }
         return new SimpleAuthenticationInfo(token, token, "MyRealm");
     }

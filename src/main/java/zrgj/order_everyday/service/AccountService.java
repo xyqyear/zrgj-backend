@@ -18,11 +18,11 @@ public class AccountService {
     @Autowired
     AccountMapper accountMapper;
 
-    public ResultMap authenticate(String username, String password){
+    public ResultMap authenticate(Integer id, String password){
 
-        Account user = accountMapper.getAccountByUsername(username);
+        Account user = accountMapper.getAccountById(id);
         if (user == null){
-            return ResultMap.failure("invalid username");
+            return ResultMap.failure("invalid id");
         }
         String encryptedPassword = Encryption.getSHA256(password);
         if (! encryptedPassword.equals(user.getPassword())){
@@ -35,24 +35,19 @@ public class AccountService {
     }
 
     public ResultMap addNewAccount(Account account) {
-        Account user = accountMapper.getAccountByUsername(account.getUsername());
-        if (user != null){
-            return ResultMap.failure("username already exists");
-        }
         account.setPassword(Encryption.getSHA256(account.getPassword()));
         accountMapper.addNewAccount(account);
         return ResultMap.success(null);
     }
 
-    public ResultMap getAccountInfo(String username) {
-        Account user = accountMapper.getAccountByUsername(username);
+    public ResultMap getAccountInfo(Integer id) {
+        Account user = accountMapper.getAccountById(id);
         if (user == null){
-            return ResultMap.failure("invalid username");
+            return ResultMap.failure("invalid user id");
         }
         user.setPassword("就不告诉你");
         return ResultMap.success(user);
     }
-
 
     public ResultMap updateAccount(Account account) {
         accountMapper.updateAccount(account);
@@ -65,10 +60,10 @@ public class AccountService {
         return ResultMap.success(null);
     }
 
-    public ResultMap deleteAccount(String username) {
-        int deleteNum = accountMapper.deleteAccount(username);
+    public ResultMap deleteAccount(Integer id) {
+        int deleteNum = accountMapper.deleteAccount(id);
         if (deleteNum == 0) {
-            return ResultMap.failure("username doesn't exist");
+            return ResultMap.failure("user id doesn't exist");
         }
         return ResultMap.success(null);
     }

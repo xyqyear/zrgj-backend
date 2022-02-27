@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface AccountMapper {
-    Account getAccountByUsername(String username);
+    Account getAccountById(Integer id);
 
     Integer addNewAccount(Account account);
 
@@ -17,7 +17,7 @@ public interface AccountMapper {
 
     Integer changePassword(Account account);
 
-    Integer deleteAccount(String username);
+    Integer deleteAccount(Integer id);
 
     List<Account> getAccountList(Integer restaurantId);
 }

@@ -18,4 +18,5 @@ public class Account {
     private String password;
     private Integer restaurantId;
     private String avatarUrl;
+    private String telephone;
 }

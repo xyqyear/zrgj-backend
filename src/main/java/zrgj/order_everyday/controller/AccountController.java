@@ -25,8 +25,8 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> authenticate(@RequestBody Map<String, String> body) {
-        ResultMap result = accountService.authenticate(body.get("username"), body.get("password"));
+    public ResponseEntity<Object> authenticate(@RequestBody Map<String, Object> body) {
+        ResultMap result = accountService.authenticate((Integer) body.get("id"), (String) body.get("password"));
         return ResponseWrapper.wrap(result);
     }
 
@@ -40,8 +40,8 @@ public class AccountController {
 
     @PostMapping("/delete")
     @RequiresRoles("0")
-    public ResponseEntity<Object> deleteAccount(@RequestBody Map<String, String> body) {
-        return ResponseWrapper.wrap(accountService.deleteAccount(body.get("username")));
+    public ResponseEntity<Object> deleteAccount(@RequestBody Map<String, Integer> body) {
+        return ResponseWrapper.wrap(accountService.deleteAccount(body.get("id")));
     }
 
     @PostMapping("/update")
@@ -57,8 +57,8 @@ public class AccountController {
     }
 
     @PostMapping("/get")
-    public ResponseEntity<Object> getAccountInfo(@RequestBody Map<String, String> body) {
-        return ResponseWrapper.wrap(accountService.getAccountInfo(body.get("username")));
+    public ResponseEntity<Object> getAccountInfo(@RequestBody Map<String, Integer> body) {
+        return ResponseWrapper.wrap(accountService.getAccountInfo(body.get("id")));
     }
 
     @PostMapping("/list")
