@@ -42,6 +42,6 @@
     <select id="getDishById" parameterType="java.lang.Integer" resultType="zrgj.order_everyday.entity.Dish">
         select *
         from dish
-          and id = #{id}
+          where id = #{id}
     </select>
 </mapper>
