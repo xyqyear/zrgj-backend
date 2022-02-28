@@ -42,7 +42,6 @@
     <select id="getDishById" parameterType="java.lang.Integer" resultType="zrgj.order_everyday.entity.Dish">
         select *
         from dish
-        where deleted = false
           and id = #{id}
     </select>
 </mapper>
