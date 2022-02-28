@@ -5,8 +5,8 @@
     <select id="getAccountById" parameterType="java.lang.Integer" resultType="zrgj.order_everyday.entity.Account">
         select *
         from account
-        where id=#{id}
-        and deleted=false
+        where id = #{id}
+          and deleted = false
     </select>
 
     <insert id="addNewAccount" parameterType="zrgj.order_everyday.entity.Account">
@@ -20,20 +20,20 @@
             username=#{username},
             avatar_url=#{avatarUrl},
             telephone=#{telephone}
-        where id=#{id}
+        where id = #{id}
     </update>
 
     <update id="changePassword" parameterType="zrgj.order_everyday.entity.Account">
         update account
         set password=#{password}
-        where id=#{id}
+        where id = #{id}
     </update>
 
     <update id="deleteAccount" parameterType="java.lang.Integer">
         update account
-        set deleted=true
-        where id=#{od}
-        and deleted=false
+        set deleted= true
+        where id = #{id}
+          and deleted = false
     </update>
 
     <select id="getAccountList" parameterType="java.lang.Integer" resultType="zrgj.order_everyday.entity.Account">
@@ -41,6 +41,7 @@
         from account
         where restaurant_id = #{restaurantId}
           and position != 0
+          and deleted = false
     </select>
 
 </mapper>
