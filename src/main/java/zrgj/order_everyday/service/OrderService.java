@@ -96,6 +96,7 @@ public class OrderService {
             orderMap.put("state", order.getState());
             orderMap.put("createTime", order.getCreateTime());
             orderMap.put("payTime", order.getPayTime());
+            orderMap.put("waiterId", order.getWaiterId());
             List<OrderItem> orderItems = orderItemMapper.getOrderItemsByOrderId(order.getId());
             int totalPrice = 0;
             for (OrderItem orderItem : orderItems) {
@@ -121,6 +122,7 @@ public class OrderService {
             orderMap.put("state", order.getState());
             orderMap.put("createTime", order.getCreateTime());
             orderMap.put("payTime", order.getPayTime());
+            orderMap.put("waiterId", order.getWaiterId());
             List<OrderItem> orderItems = orderItemMapper.getOrderItemsByOrderId(order.getId());
             int totalPrice = 0;
             for (OrderItem orderItem : orderItems) {
