@@ -1,10 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="zrgj.order_everyday.mapper.DishMapper">
+    <resultMap id="getDishListResult" type="zrgj.order_everyday.entity.Dish">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="price" column="price" />
+        <result property="imageUrl" column="image_url" />
+        <result property="category" column="category" />
+        <result property="restaurantId" column="restaurant_id" />
+        <result property="flavour" column="flavour" typeHandler="zrgj.order_everyday.handler.JacksonTypeHandler" />
+    </resultMap>
 
     <insert id="addNewDish" parameterType="zrgj.order_everyday.entity.Dish">
-        insert into dish (name, price, image_url, category, restaurant_id)
-        values (#{name}, #{price}, #{imageUrl}, #{category}, #{restaurantId})
+        insert into dish (name, price, image_url, category, restaurant_id, flavour)
+        values (#{name}, #{price}, #{imageUrl}, #{category}, #{restaurantId}, #{flavour, typeHandler=zrgj.order_everyday.handler.JacksonTypeHandler})
     </insert>
 
     <update id="deleteDish" parameterType="java.lang.String">
@@ -18,20 +27,19 @@
         set name=#{name},
             price=#{price},
             image_url=#{imageUrl},
-            category=#{category}
+            category=#{category},
+            flavour=#{flavour, typeHandler=zrgj.order_everyday.handler.JacksonTypeHandler}
         where id = #{id}
     </update>
 
-    <select id="getDishList" parameterType="java.lang.Integer"
-            resultType="zrgj.order_everyday.entity.Dish">
-        select id, name, price, image_url, category, restaurant_id
+    <select id="getDishList" parameterType="java.lang.Integer" resultMap="getDishListResult">
+        select id, name, price, image_url, category, restaurant_id, flavour
         from dish
         where restaurant_id = #{restaurantId}
           and deleted = false
     </select>
 
-    <select id="getDishByName" parameterType="zrgj.order_everyday.entity.Dish"
-            resultType="zrgj.order_everyday.entity.Dish">
+    <select id="getDishByName" resultType="zrgj.order_everyday.entity.Dish" resultMap="getDishListResult">
         select *
         from dish
         where deleted = false
@@ -39,7 +47,7 @@
           and restaurant_id = #{restaurantId}
     </select>
 
-    <select id="getDishById" parameterType="java.lang.Integer" resultType="zrgj.order_everyday.entity.Dish">
+    <select id="getDishById" parameterType="java.lang.Integer" resultMap="getDishListResult">
         select *
         from dish
           where id = #{id}
