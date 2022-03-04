@@ -20,4 +20,5 @@ public class Dish {
     private String category;
     private JsonNode flavour;
     private Integer restaurantId;
+    private Boolean deleted;
 }

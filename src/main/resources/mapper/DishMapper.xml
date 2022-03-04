@@ -33,10 +33,9 @@
     </update>
 
     <select id="getDishList" parameterType="java.lang.Integer" resultMap="getDishListResult">
-        select id, name, price, image_url, category, restaurant_id, flavour
+        select id, name, price, image_url, category, restaurant_id, flavour, deleted
         from dish
         where restaurant_id = #{restaurantId}
-          and deleted = false
     </select>
 
     <select id="getDishByName" resultType="zrgj.order_everyday.entity.Dish" resultMap="getDishListResult">
