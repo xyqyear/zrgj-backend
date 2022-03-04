@@ -24,10 +24,9 @@
 
     <select id="getDishList" parameterType="java.lang.Integer"
             resultType="zrgj.order_everyday.entity.Dish">
-        select id, name, price, image_url, category, restaurant_id
+        select id, name, price, image_url, category, restaurant_id, deleted
         from dish
         where restaurant_id = #{restaurantId}
-          and deleted = false
     </select>
 
     <select id="getDishByName" parameterType="zrgj.order_everyday.entity.Dish"
