@@ -9,6 +9,7 @@
         <result property="category" column="category" />
         <result property="restaurantId" column="restaurant_id" />
         <result property="flavour" column="flavour" typeHandler="zrgj.order_everyday.handler.JacksonTypeHandler" />
+        <result property="deleted" column="deleted" />
     </resultMap>
 
     <insert id="addNewDish" parameterType="zrgj.order_everyday.entity.Dish">
@@ -33,7 +34,7 @@
     </update>
 
     <select id="getDishList" parameterType="java.lang.Integer" resultMap="getDishListResult">
-        select id, name, price, image_url, category, restaurant_id, flavour, deleted
+        select *
         from dish
         where restaurant_id = #{restaurantId}
     </select>
