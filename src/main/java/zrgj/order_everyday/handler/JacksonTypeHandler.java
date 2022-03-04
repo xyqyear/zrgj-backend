@@ -12,7 +12,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedJdbcTypes;
+import org.apache.ibatis.type.MappedTypes;
 
+@MappedTypes(JsonNode.class)
+@MappedJdbcTypes(JdbcType.VARCHAR)
 public class JacksonTypeHandler extends BaseTypeHandler<JsonNode> {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
@@ -26,32 +30,39 @@ public class JacksonTypeHandler extends BaseTypeHandler<JsonNode> {
     @Override
     public JsonNode getNullableResult(ResultSet rs, String columnName) throws SQLException {
         String json = rs.getString(columnName);
-        System.out.println(json);
-        return read(json);
+        if (json != null) {
+            return read(json);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public JsonNode getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
         String json = rs.getString(columnIndex);
-        System.out.println(json);
-        return read(json);
+        if (json != null) {
+            return read(json);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public JsonNode getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         String json = cs.getString(columnIndex);
-        System.out.println(json);
-        return read(json);
+        if (json != null) {
+            return read(json);
+        } else {
+            return null;
+        }
     }
 
     private JsonNode read(String json) {
         try {
             return objectMapper.readTree(json);
         } catch (JsonParseException e) {
-            // logging!
             return null;
         } catch (IOException e) {
-            // should not occur, no real i/o...
             throw new IllegalArgumentException(e.getMessage(), e);
         }
     }
