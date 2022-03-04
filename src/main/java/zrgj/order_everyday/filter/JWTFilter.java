@@ -1,5 +1,6 @@
 package zrgj.order_everyday.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
@@ -7,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import zrgj.order_everyday.pojo.dto.ResultMap;
 import zrgj.order_everyday.shiro.JWTToken;
 
@@ -15,10 +15,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @Author yuanhaoyue swithaoy@gmail.com
@@ -30,7 +29,12 @@ import java.io.IOException;
 public class JWTFilter extends BasicHttpAuthenticationFilter {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private String contextPath = "/api/v1";
+    private final String contextPath = "/api/v1";
+
+    private final Set<String> openAreas = new HashSet<>() {{
+        add("/api/v1/account/login");
+        add("/api/v1/account/test");
+    }};
 
     /**
      * 如果带有 token，则对 token 进行检查，否则直接通过
@@ -61,7 +65,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String token = httpServletRequest.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")){
+        if (token == null || !token.startsWith("Bearer ")) {
             throw new IllegalAccessException("the authorization method is not JWT");
         }
         token = token.substring(7);
