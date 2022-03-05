@@ -40,35 +40,42 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      * 如果带有 token，则对 token 进行检查，否则直接通过
      */
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws UnauthorizedException {
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
+            throws UnauthorizedException {
         HttpServletRequest req = (HttpServletRequest) request;
         String uri = req.getRequestURI();
         if (!uri.equals(contextPath + "/account/login")) {
-            //如果存在，则进入 executeLogin 方法执行登入，检查 token 是否正确
             try {
                 executeLogin(request, response);
-                return true;
             } catch (Exception e) {
-                //token 错误
                 responseError(response, e.getMessage());
             }
         }
-        //如果请求头不存在 Token，则可能是执行登陆操作或者是游客状态访问，无需检查 token，直接返回 true
         return true;
     }
-
 
     /**
      * 执行登陆操作
      */
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String token = httpServletRequest.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) {
-            throw new IllegalAccessException("the authorization method is not JWT");
+        HttpServletRequest req = (HttpServletRequest) request;
+        String token;
+        if (req.getRequestURI().startsWith(contextPath + "/chat")) {
+            token = req.getParameter("token");
+            if (token == null) {
+                responseError(response, "no token present in request parameter");
+                return false;
+            }
+        } else {
+            token = req.getHeader("Authorization");
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            } else {
+                responseError(response, "no token present in request header");
+                return false;
+            }
         }
-        token = token.substring(7);
         JWTToken jwtToken = new JWTToken(token);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
         getSubject(request, response).login(jwtToken);
@@ -85,7 +92,8 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setHeader("Access-control-Allow-Origin", httpServletRequest.getHeader("Origin"));
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
-        httpServletResponse.setHeader("Access-Control-Allow-Headers", httpServletRequest.getHeader("Access-Control-Request-Headers"));
+        httpServletResponse.setHeader("Access-Control-Allow-Headers",
+                httpServletRequest.getHeader("Access-Control-Request-Headers"));
         // 跨域时会首先发送一个option请求，这里我们给option请求直接返回正常状态
         if (httpServletRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
             httpServletResponse.setStatus(HttpStatus.OK.value());
