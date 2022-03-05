@@ -2,11 +2,13 @@ package zrgj.order_everyday.controller;
 
 import com.auth0.jwt.interfaces.Claim;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import zrgj.order_everyday.entity.Notification;
 import zrgj.order_everyday.pojo.dto.ResultMap;
 import zrgj.order_everyday.service.NotificationService;
@@ -97,36 +99,6 @@ public class NotificationController {
         ResultMap result = notificationService.getNotificationList(
                 claimMap.get("restaurantId").asInt(),
                 claimMap.get("position").asInt());
-        return ResponseWrapper.wrap(result);
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<Object> addNotification(@RequestBody Notification notification, @RequestHeader("Authorization") String token) {
-        Map<String, Claim> claimMap = JWTUtil.getClaimsFromHeader(token);
-        notification.setRestaurantId(claimMap.get("restaurantId").asInt());
-        notification.setSenderId(claimMap.get("userId").asInt());
-        ResultMap result = notificationService.addNotification(notification);
-        return ResponseWrapper.wrap(result);
-    }
-
-    @PostMapping("/delete")
-    @RequiresRoles("0")
-    public ResponseEntity<Object> deleteNotification(@RequestBody Map<String, String> body, @RequestHeader("Authorization") String token) {
-        Map<String, Claim> claimMap = JWTUtil.getClaimsFromHeader(token);
-        ResultMap result = notificationService.deleteNotification(notification);
-        return ResponseWrapper.wrap(result);
-    }
-
-    @PostMapping("/update")
-    @RequiresRoles("0")
-    public ResponseEntity<Object> updateNotification(@RequestBody Notification notification, @RequestHeader("Authorization") String token) {
-        ResultMap result = notificationService.updateNotification(notification);
-        return ResponseWrapper.wrap(result);
-    }
-
-    @PostMapping("/confirm")
-    public ResponseEntity<Object> confirmNotification(@RequestBody Notification notification, @RequestHeader("Authorization") String token) {
-        ResultMap result = notificationService.confirmNotification(notification);
         return ResponseWrapper.wrap(result);
     }
 
