@@ -16,7 +16,7 @@
         }
 
         function connect() {
-            var socket = new SockJS('http://localhost:5678/api/v1/chat');
+            var socket = new SockJS('http://localhost:5678/api/v1/chat?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwicG9zaXRpb24iOjAsInJlc3RhdXJhbnRJZCI6MSwiZXhwIjoxNjQ2NDY2NjQ4LCJ1c2VySWQiOjJ9.kdgLdPAc94LgzWNbfvHgaAJKtBLTkeqSqnmdNXUQcJ4');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
                 setConnected(true);
