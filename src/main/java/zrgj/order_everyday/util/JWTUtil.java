@@ -39,7 +39,6 @@ public class JWTUtil {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             // 附带username信息
             return JWT.create()
-                    .withClaim("id", account.getId())
                     .withClaim("position", account.getPosition())
                     .withClaim("restaurantId", account.getRestaurantId())
                     .withClaim("userId", account.getId())
@@ -64,7 +63,6 @@ public class JWTUtil {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             //在token中附带了username信息
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withClaim("id", info.get("id").asInt())
                     .withClaim("position", info.get("position").asInt())
                     .withClaim("restaurantId", info.get("restaurantId").asInt())
                     .withClaim("userId", info.get("userId").asInt())

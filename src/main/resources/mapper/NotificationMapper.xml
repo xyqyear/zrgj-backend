@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zrgj.order_everyday.mapper.NotificationMapper">
+
+    <resultMap id="notificationMap" type="zrgj.order_everyday.entity.Notification">
+        <result property="confirmation" column="confirmation"
+                   typeHandler="zrgj.order_everyday.handler.JacksonTypeHandler"/>
+    </resultMap>
+
+    <select id="getNotificationList" resultMap="notificationMap">
+        select * from notification where restaurant_id=#{restaurantId} and deleted=false
+    </select>
+
+</mapper>

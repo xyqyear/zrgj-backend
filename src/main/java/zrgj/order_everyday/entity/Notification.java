@@ -1,5 +1,6 @@
 package zrgj.order_everyday.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,8 @@ public class Notification {
     private String title;
     private String content;
     private Integer senderId;
-    private String confirmation;
+    private Integer receiverType;
+    private Integer restaurantId;
+    private Boolean sticked;
+    private JsonNode confirmation;
 }
