@@ -1,11 +1,9 @@
 package zrgj.order_everyday.controller;
 
 import com.auth0.jwt.interfaces.Claim;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import zrgj.order_everyday.entity.Notification;
 import zrgj.order_everyday.pojo.dto.ResultMap;
@@ -13,11 +11,7 @@ import zrgj.order_everyday.service.NotificationService;
 import zrgj.order_everyday.util.JWTUtil;
 import zrgj.order_everyday.util.ResponseWrapper;
 
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 @RequestMapping("/notification")

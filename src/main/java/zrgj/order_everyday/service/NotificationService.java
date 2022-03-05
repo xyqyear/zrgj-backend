@@ -3,6 +3,7 @@ package zrgj.order_everyday.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import zrgj.order_everyday.entity.Notification;
 import zrgj.order_everyday.mapper.AccountMapper;
@@ -10,7 +11,6 @@ import zrgj.order_everyday.mapper.NotificationMapper;
 import zrgj.order_everyday.pojo.dto.ResultMap;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +22,9 @@ public class NotificationService {
 
     @Autowired
     AccountMapper accountMapper;
+
+    @Autowired
+    private SimpMessagingTemplate template;
 
     public ResultMap getNotificationList(Integer restaurantId, Integer position) {
         List<Notification>notifications = notificationMapper.getNotificationList(restaurantId, position);
@@ -40,6 +43,7 @@ public class NotificationService {
         JsonNode node = mapper.valueToTree(confirmation);
         notification.setConfirmation(node);
         notificationMapper.addNotification(notification);
+        // this.template.convertAndSend("/notification/1/0", "{\"id\": " + id + "}");
         return ResultMap.success(null);
     }
 
