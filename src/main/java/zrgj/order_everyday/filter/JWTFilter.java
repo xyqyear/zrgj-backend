@@ -40,8 +40,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             throws UnauthorizedException {
         HttpServletRequest req = (HttpServletRequest) request;
         String uri = req.getRequestURI();
-        if (!uri.equals(contextPath + "/account/login") && !uri.equals(contextPath + "/")
-                && !uri.equals(contextPath + "/stomp.min.js")) {
+        if (!uri.equals(contextPath + "/account/login")) {
             try {
                 executeLogin(request, response);
             } catch (Exception e) {
