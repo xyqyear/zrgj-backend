@@ -19,5 +19,7 @@ public interface AccountMapper {
 
     Integer deleteAccount(Integer id);
 
+    List<Integer> getIdByPosition(Integer restaurantId,Integer position);
+
     List<Account> getAccountList(Integer restaurantId);
 }

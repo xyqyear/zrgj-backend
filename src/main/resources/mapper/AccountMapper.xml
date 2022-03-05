@@ -44,4 +44,9 @@
           and deleted = false
     </select>
 
+    <select id="getIdByPosition" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select id
+        from account
+        where position =#{position} and deleted = false and restaurant_id = #{restaurantId}
+    </select>
 </mapper>

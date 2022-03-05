@@ -11,4 +11,28 @@
         select * from notification where restaurant_id=#{restaurantId} and deleted=false
     </select>
 
+    <update id="deleteNotification" parameterType="java.lang.Integer">
+        update notification
+        set deleted= true
+        where id = #{id}
+          and deleted = false
+    </update>
+
+    <update id="updateNotification" parameterType="zrgj.order_everyday.entity.Notification">
+        update notification
+        set title=#{title},
+            content=#{content},
+            sticked=#{sticked}
+        where id = #{id}
+    </update>
+
+    <insert id="addNotification" parameterType="zrgj.order_everyday.entity.Notification">
+        insert into notification (create_time, title, content, confirmation, sender_id, receiver_type,restaurant_id)
+        values (#{createTime}, #{title}, #{content}, #{confirmation, typeHandler=zrgj.order_everyday.handler.JacksonTypeHandler}, #{senderId}, #{receiverType},#{restaurantId})
+    </insert>
+
+    <update id="confirmNotification" parameterType="java.lang.String">
+        ${sql}
+    </update>
+
 </mapper>

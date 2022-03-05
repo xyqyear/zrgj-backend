@@ -11,4 +11,12 @@ import java.util.List;
 public interface NotificationMapper {
 
     List<Notification> getNotificationList(Integer restaurantId, Integer position);
+
+    Integer deleteNotification(Integer id);
+
+    Integer updateNotification(Notification notification);
+
+    Integer addNotification(Notification notification);
+
+    Integer confirmNotification(String sql);
 }
