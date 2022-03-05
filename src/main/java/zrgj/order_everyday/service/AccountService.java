@@ -46,7 +46,7 @@ public class AccountService {
     }
 
     public ResultMap getAccountInfo(Integer id) {
-        this.template.convertAndSend("/topic/shit", "{\"id\": " + id + "}");
+        this.template.convertAndSend("/notification/1/0", "{\"id\": " + id + "}");
         Account user = accountMapper.getAccountById(id);
         if (user == null){
             return ResultMap.failure("invalid user id");
