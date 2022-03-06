@@ -31,11 +31,6 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
 
     private final String contextPath = "/api/v1";
 
-    private final Set<String> openAreas = new HashSet<>() {{
-        add("/api/v1/account/login");
-        add("/api/v1/account/test");
-    }};
-
     /**
      * 如果带有 token，则对 token 进行检查，否则直接通过
      */
