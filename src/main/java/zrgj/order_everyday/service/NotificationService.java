@@ -51,7 +51,6 @@ public class NotificationService {
             for (Integer id : list) {
                 confirmation.put(id, false);
             }
-
             this.template.convertAndSend("/notification/" + notification.getRestaurantId() + "/" + p, notification);
         }
         ObjectMapper mapper = new ObjectMapper();
@@ -75,10 +74,11 @@ public class NotificationService {
     }
 
     public ResultMap confirmNotification(Integer notificationId, Integer id) {
-        String sql = "update notification set confirmation = JSON_SET(confirmation, '$.\"" + id + "\"', true)where id ="
-                + notificationId + " and deleted=false";
+        String sql =
+                "update notification set confirmation = JSON_SET(confirmation, '$.\"" + id + "\"', true)where id =" + notificationId + " and deleted=false";
         notificationMapper.confirmNotification(sql);
         return ResultMap.success(null);
     }
+
 
 }
