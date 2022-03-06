@@ -16,8 +16,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @Author yuanhaoyue swithaoy@gmail.com
@@ -30,11 +28,6 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final String contextPath = "/api/v1";
-
-    private final Set<String> openAreas = new HashSet<>() {{
-        add("/api/v1/account/login");
-        add("/api/v1/account/test");
-    }};
 
     /**
      * 如果带有 token，则对 token 进行检查，否则直接通过
