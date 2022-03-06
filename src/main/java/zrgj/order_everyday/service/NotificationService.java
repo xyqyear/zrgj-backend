@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Service
 public class NotificationService {
-    
+
     @Autowired
     NotificationMapper notificationMapper;
 
@@ -28,39 +28,40 @@ public class NotificationService {
     private SimpMessagingTemplate template;
 
     public ResultMap getNotificationList(Integer restaurantId, Integer position) {
-        List<Notification>notifications = notificationMapper.getNotificationList(restaurantId, position);
+        List<Notification> notifications = notificationMapper.getNotificationList(restaurantId, position);
         return ResultMap.success(notifications);
     }
 
     public ResultMap addNotification(Notification notification) {
-        Map<Integer, Boolean> confirmation =new HashMap<>();
+        Map<Integer, Boolean> confirmation = new HashMap<>();
         notification.setCreateTime((int) (System.currentTimeMillis() / 1000));
-        if (notification.getReceiverType() == null){
+        if (notification.getReceiverType() == null) {
             notification.setReceiverType(3);
         }
         List<Integer> targetPositions = new ArrayList<>();
-        if (notification.getReceiverType() > 2){
+        if (notification.getReceiverType() > 2) {
             targetPositions.add(0);
             targetPositions.add(1);
             targetPositions.add(2);
-        }
-        else{
+        } else {
             targetPositions.add(notification.getReceiverType());
         }
         for (int p : targetPositions) {
-            List<Integer>list = accountMapper.getIdByPosition(notification.getRestaurantId(), p);
-            for(Integer id : list){
-                confirmation.put(id,false);
+            List<Integer> list = accountMapper.getIdByPosition(notification.getRestaurantId(), p);
+            for (Integer id : list) {
+                confirmation.put(id, false);
             }
+
+            this.template.convertAndSend("/notification/" + notification.getRestaurantId() + "/" + p, notification);
         }
-        ObjectMapper mapper= new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.valueToTree(confirmation);
         notification.setConfirmation(node);
         notificationMapper.addNotification(notification);
         return ResultMap.success(null);
     }
 
-    public ResultMap deleteNotification(Integer id){
+    public ResultMap deleteNotification(Integer id) {
         Integer deleteNum = notificationMapper.deleteNotification(id);
         if (deleteNum == 0) {
             return ResultMap.failure("notification id doesn't exist");
@@ -68,16 +69,16 @@ public class NotificationService {
         return ResultMap.success(null);
     }
 
-    public ResultMap updateNotification(Notification notification){
+    public ResultMap updateNotification(Notification notification) {
         notificationMapper.updateNotification(notification);
         return ResultMap.success(null);
     }
 
-    public ResultMap confirmNotification(Integer notificationId,Integer id){
-        String sql = "update notification set confirmation = JSON_SET(confirmation, '$.\""+id+"\"', true)where id ="+notificationId+" and deleted=false";
+    public ResultMap confirmNotification(Integer notificationId, Integer id) {
+        String sql = "update notification set confirmation = JSON_SET(confirmation, '$.\"" + id + "\"', true)where id ="
+                + notificationId + " and deleted=false";
         notificationMapper.confirmNotification(sql);
         return ResultMap.success(null);
     }
-
 
 }
