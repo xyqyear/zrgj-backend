@@ -3,8 +3,6 @@ package zrgj.order_everyday.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +14,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @Author yuanhaoyue swithaoy@gmail.com
@@ -25,9 +24,9 @@ import java.io.IOException;
  */
 @Component
 public class JWTFilter extends BasicHttpAuthenticationFilter {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final String contextPath = "/api/v1";
+
+    private String errMessage = null;
 
     /**
      * 如果带有 token，则对 token 进行检查，否则直接通过
@@ -41,7 +40,8 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             try {
                 executeLogin(request, response);
             } catch (Exception e) {
-                responseError(response, e.getMessage());
+                this.errMessage = e.getMessage();
+                return false;
             }
         }
         return true;
@@ -57,16 +57,14 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         if (req.getRequestURI().startsWith(contextPath + "/chat")) {
             token = req.getParameter("token");
             if (token == null) {
-                responseError(response, "no token present in request parameter");
-                return false;
+                throw new Exception("no token present in request parameter");
             }
         } else {
             token = req.getHeader("Authorization");
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7);
             } else {
-                responseError(response, "no token present in request header");
-                return false;
+                throw new Exception("no token present in request header");
             }
         }
         JWTToken jwtToken = new JWTToken(token);
@@ -95,17 +93,27 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         return super.preHandle(request, response);
     }
 
-    /**
-     * 将非法请求跳转到 /unauthorized/**
-     */
-    private void responseError(ServletResponse response, String message) {
+    @Override
+    protected boolean onAccessDenied(ServletRequest request,
+            ServletResponse response) throws Exception {
+        PrintWriter out = null;
         try {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+            httpServletResponse.setStatus(400);
             httpServletResponse.setContentType("application/json");
             httpServletResponse.setCharacterEncoding("UTF-8");
-            httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString(ResultMap.failure(message)));
+            out = httpServletResponse.getWriter();
+            if (this.errMessage == null) {
+                this.errMessage = "unknown error while logging in";
+            }
+            out.write(new ObjectMapper().writeValueAsString(ResultMap.failure(this.errMessage)));
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                out.close();
+            }
         }
+        return false;
     }
 }
