@@ -58,7 +58,7 @@ public class OrderService {
     public ResultMap checkout(Integer orderId) {
         Order order = orderMapper.getOrderById(orderId);
         if (order.getState() == 0) {
-            return ResultMap.failure("order" + orderId + "is already checked out");
+            return ResultMap.failure("order " + orderId + " is already checked out");
         }
         order.setState(0);
         order.setPayTime((int) (System.currentTimeMillis() / 1000));

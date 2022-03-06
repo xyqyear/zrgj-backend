@@ -32,8 +32,8 @@ public class OrderItemController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<Object> deleteOrderItem(@RequestBody Integer orderItemId) {
-        return ResponseWrapper.wrap(orderItemService.deleteOrderItem(orderItemId));
+    public ResponseEntity<Object> deleteOrderItem(@RequestBody OrderItem orderItem) {
+        return ResponseWrapper.wrap(orderItemService.deleteOrderItem(orderItem));
     }
 
     @PostMapping("/add")

@@ -32,10 +32,10 @@ public class OrderItemService {
     }
 
     // delete order item
-    public ResultMap deleteOrderItem(Integer orderItemId) {
-        int deletedNum = orderItemMapper.deleteOrderItem(orderItemId);
+    public ResultMap deleteOrderItem(OrderItem orderItem) {
+        int deletedNum = orderItemMapper.deleteOrderItem(orderItem.getId());
         if (deletedNum < 1) {
-            return ResultMap.failure("orderItem" + orderItemId + "not found or already deleted");
+            return ResultMap.failure("orderItem " + orderItem.getId() + " not found or already deleted");
         }
         return ResultMap.success(null);
     }
