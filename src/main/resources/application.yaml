@@ -1,14 +1,13 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/zrgj4?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: 0000000a
+    url: jdbc:mysql://101.34.48.210:3306/zrgj4?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+    username: zrgj4
+    password: zrgj4
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
 
 #showSql
