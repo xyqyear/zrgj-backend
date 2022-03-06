@@ -31,13 +31,9 @@ public interface OrderItemMapper {
     @Select("SELECT * FROM `order_item` WHERE `order_id` = #{orderId}")
     List<OrderItem> getOrderItemsByOrderId(Integer orderId);
 
-    // get order items by order id and state is 1
-    @Select("SELECT * FROM `order_item` WHERE `order_id` = #{orderId} AND `state` = 1")
-    List<OrderItem> getUncompletedOrderItemsByOrderId(Integer orderId);
-
-    // get order items by order id and state is 0
-    @Select("SELECT * FROM `order_item` WHERE `order_id` = #{orderId} AND `state` = 0")
-    List<OrderItem> getCompletedOrderItemsByOrderId(Integer orderId);
+    // set order item state to -1 if it's state isn't 0 by order id
+    @Update("UPDATE `order_item` SET `state` = -1 WHERE `order_id` = #{orderId} AND `state` != 0")
+    void cancelOrderItemByOrderId(Integer orderId);
 
     // update order item with state, dishId, amount and note
     @Update("UPDATE `order_item` SET `state` = #{state}, `dish_id` = #{dishId}, `amount` = #{amount}, `note` = #{note} WHERE `id` = #{id}")
@@ -45,5 +41,5 @@ public interface OrderItemMapper {
 
     // set state to -1
     @Update("UPDATE `order_item` SET `state` = -1 WHERE `id` = #{id}")
-    void deleteOrderItem(Integer id);
+    Integer deleteOrderItem(Integer id);
 }

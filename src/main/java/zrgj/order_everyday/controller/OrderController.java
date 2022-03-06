@@ -1,6 +1,5 @@
 package zrgj.order_everyday.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import com.auth0.jwt.interfaces.Claim;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import zrgj.order_everyday.entity.Order;
 import zrgj.order_everyday.service.OrderService;
 import zrgj.order_everyday.util.ResponseWrapper;
 import zrgj.order_everyday.util.JWTUtil;
@@ -23,14 +24,12 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping("/add")
-    @SuppressWarnings("unchecked")
     public ResponseEntity<Object> order(@RequestHeader("Authorization") String token,
-            @RequestBody Map<String, Object> body) {
+            @RequestBody Order order) {
         Map<String, Claim> userInfo = JWTUtil.getClaimsFromHeader(token);
         int waiterId = userInfo.get("userId").asInt();
         int restaurantId = userInfo.get("restaurantId").asInt();
-        return ResponseWrapper.wrap(orderService.newOrder((Integer) body.get("tableId"), waiterId, restaurantId,
-                (List<Map<String, Object>>) body.get("orderItems")));
+        return ResponseWrapper.wrap(orderService.newOrder(order, waiterId, restaurantId));
     }
 
     @PostMapping("/checkout")

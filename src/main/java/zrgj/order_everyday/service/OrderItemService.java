@@ -33,29 +33,29 @@ public class OrderItemService {
 
     // delete order item
     public ResultMap deleteOrderItem(Integer orderItemId) {
-        orderItemMapper.deleteOrderItem(orderItemId);
+        int deletedNum = orderItemMapper.deleteOrderItem(orderItemId);
+        if (deletedNum < 1) {
+            return ResultMap.failure("orderItem" + orderItemId + "not found or already deleted");
+        }
         return ResultMap.success(null);
     }
 
     // create order item
-    public ResultMap createOrderItem(Integer orderID, Integer dishID, Integer amount, String note) {
-        OrderItem orderItem = new OrderItem();
-        if (amount < 1) {
+    public ResultMap createOrderItem(OrderItem orderItem) {
+        if (orderItem.getAmount() < 1) {
             return ResultMap.failure("amount must be positive integer");
         }
-        orderItem.setDishId(dishID);
         orderItem.setState(1);
-        orderItem.setAmount(amount);
-        orderItem.setNote(note);
-        orderItem.setOrderId(orderID);
-        if(dishMapper.getDishById(dishID) == null){
+        if (dishMapper.getDishById(orderItem.getDishId()) == null) {
             return ResultMap.failure("invalid dish in this orderItem");
         }
-        try{
+
+        try {
             orderItemMapper.createOrderItem(orderItem);
         } catch (Exception e) {
             return ResultMap.failure("invalid order in this orderItem");
         }
+
         return ResultMap.success((null));
     }
 

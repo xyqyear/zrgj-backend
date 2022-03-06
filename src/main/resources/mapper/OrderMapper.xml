@@ -1,7 +1,78 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="zrgj.order_everyday.mapper.OrderMapper">
 
+    <resultMap id="orderMap" type="zrgj.order_everyday.entity.Order">
+        <id property="id" column="order_id" />
+        <result property="tableId" column="order_table_id"></result>
+        <result property="createTime" column="order_create_time"></result>
+        <result property="payTime" column="order_pay_time"></result>
+        <result property="state" column="order_state"></result>
+        <result property="waiterId" column="order_waiter_id"></result>
+        <result property="restaurantId" column="order_restaurant_id"></result>
+        <collection property="orderItems" ofType="zrgj.order_everyday.entity.OrderItem">
+            <id property="id" column="order_item_id" />
+            <result property="dishId" column="order_item_dish_id"></result>
+            <result property="state" column="order_item_state"></result>
+            <result property="amount" column="order_item_amount"></result>
+            <result property="note" column="order_item_note"></result>
+            <result property="cookId" column="order_item_cook_id"></result>
+        </collection>
 
+    </resultMap>
+
+    <select id="getOrderById" resultMap="orderMap">
+        select
+            o.id order_id,
+            o.table_id order_table_id,
+            o.create_time order_create_time,
+            o.pay_time order_pay_time,
+            o.state order_state,
+            o.waiter_id order_waiter_id,
+            o.restaurant_id order_restaurant_id,
+            oi.id order_item_id,
+            oi.dish_id order_item_dish_id,
+            oi.state order_item_state,
+            oi.amount order_item_amount,
+            oi.note order_item_note,
+            oi.cook_id order_item_cook_id
+        from `order` o left join order_item oi on o.id = oi.order_id where id = #{orderId}
+    </select>
+
+    <select id="getOngoingOrders" resultMap="orderMap">
+        select 
+            o.id order_id,
+            o.table_id order_table_id,
+            o.create_time order_create_time,
+            o.pay_time order_pay_time,
+            o.state order_state,
+            o.waiter_id order_waiter_id,
+            o.restaurant_id order_restaurant_id,
+            oi.id order_item_id,
+            oi.dish_id order_item_dish_id,
+            oi.state order_item_state,
+            oi.amount order_item_amount,
+            oi.note order_item_note,
+            oi.cook_id order_item_cook_id
+        from `order` o left join order_item oi on o.id = oi.order_id where o.state IN (1, 2) AND restaurant_id = #{restaurantId}
+    </select>
+
+    <select id="getOrdersInRange" resultMap="orderMap">
+        select 
+            o.id order_id,
+            o.table_id order_table_id,
+            o.create_time order_create_time,
+            o.pay_time order_pay_time,
+            o.state order_state,
+            o.waiter_id order_waiter_id,
+            o.restaurant_id order_restaurant_id,
+            oi.id order_item_id,
+            oi.dish_id order_item_dish_id,
+            oi.state order_item_state,
+            oi.amount order_item_amount,
+            oi.note order_item_note,
+            oi.cook_id order_item_cook_id
+        from `order` o left join order_item oi on o.id = oi.order_id where create_time &gt;= #{from} AND create_time &lt;= #{to} AND restaurant_id = #{restaurantId}
+    </select>
 
 </mapper>

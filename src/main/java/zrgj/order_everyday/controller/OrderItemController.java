@@ -13,8 +13,6 @@ import zrgj.order_everyday.service.OrderItemService;
 import zrgj.order_everyday.util.JWTUtil;
 import zrgj.order_everyday.util.ResponseWrapper;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/order_item")
 public class OrderItemController {
@@ -39,8 +37,8 @@ public class OrderItemController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Object> insertOrderItem(@RequestBody Map<String,Object>body) {
-        return ResponseWrapper.wrap(orderItemService.createOrderItem((Integer) body.get("orderId"),(Integer)body.get("dishId"),(Integer)body.get("amount"),(String)body.get("note")));
+    public ResponseEntity<Object> insertOrderItem(@RequestBody OrderItem orderItem) {
+        return ResponseWrapper.wrap(orderItemService.createOrderItem(orderItem));
     }
 
 }
