@@ -10,8 +10,8 @@
     </select>
 
     <insert id="addNewAccount" parameterType="zrgj.order_everyday.entity.Account">
-        insert into account (username, position, password, avatar_url, restaurant_id, telephone)
-        values (#{username}, #{position}, #{password}, #{avatarUrl}, #{restaurantId}, #{telephone})
+        insert into account (username, position, password, avatar_url, restaurant_id, telephone, id_card)
+        values (#{username}, #{position}, #{password}, #{avatarUrl}, #{restaurantId}, #{telephone}, #{idCard})
     </insert>
 
     <update id="updateAccount" parameterType="zrgj.order_everyday.entity.Account">
@@ -19,7 +19,8 @@
         set position=#{position},
             username=#{username},
             avatar_url=#{avatarUrl},
-            telephone=#{telephone}
+            telephone=#{telephone},
+            id_card=#{idCard}
         where id = #{id}
     </update>
 
