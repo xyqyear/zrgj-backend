@@ -52,7 +52,6 @@ public class NotificationService {
                 confirmation.put(id, false);
             }
             this.template.convertAndSend("/notification/" + notification.getRestaurantId() + "/" + p, notification);
-            System.out.println("/notification/" + notification.getRestaurantId() + "/" + p);
         }
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.valueToTree(confirmation);

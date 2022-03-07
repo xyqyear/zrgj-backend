@@ -1,14 +1,17 @@
 package zrgj.order_everyday.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import zrgj.order_everyday.entity.Dish;
+import zrgj.order_everyday.entity.Notification;
+import zrgj.order_everyday.entity.Order;
 import zrgj.order_everyday.entity.OrderItem;
 import zrgj.order_everyday.mapper.DishMapper;
 import zrgj.order_everyday.mapper.OrderItemMapper;
+import zrgj.order_everyday.mapper.OrderMapper;
 import zrgj.order_everyday.pojo.dto.ResultMap;
+
+import java.util.List;
 
 @Service
 public class OrderItemService {
@@ -17,7 +20,13 @@ public class OrderItemService {
     OrderItemMapper orderItemMapper;
 
     @Autowired
+    NotificationService notificationService;
+
+    @Autowired
     DishMapper dishMapper;
+
+    @Autowired
+    OrderMapper orderMapper;
 
     // get uncompleted order items
     public ResultMap getUncompletedOrderItems(Integer restaurantId) {
@@ -27,6 +36,36 @@ public class OrderItemService {
 
     // update order item
     public ResultMap updateOrderItem(OrderItem orderItem) {
+        OrderItem oi = orderItemMapper.getOrderItemById(orderItem.getId());
+        // 生成订单项状态修改给对应的群体
+        // 2 =》 0 烹饪完成
+        if (oi.getState() == 2 && orderItem.getState() == 0) {
+            Order order = orderMapper.getOrderById(orderItem.getOrderId());
+            Dish dish = dishMapper.getDishById(orderItem.getDishId());
+            Notification notification = new Notification();
+            notification.setSenderId(orderItem.getCookId());
+            notification.setRestaurantId(order.getRestaurantId());
+            notification.setSticked(false);
+            notification.setReceiverType(1);
+            notification.setTitle("请送餐到桌");
+            notification.setContent(order.getTableId().toString() + "号餐桌有新的菜品(" +
+                    dish.getName() + ")已烹饪完成，请尽快送餐到桌！！");
+            notificationService.addNotification(notification);
+        }
+        // 1 =》 -1 订单项取消
+        if (oi.getState() == 2 && orderItem.getState() == 0) {
+            Order order = orderMapper.getOrderById(orderItem.getOrderId());
+            Dish dish = dishMapper.getDishById(orderItem.getDishId());
+            Notification notification = new Notification();
+            notification.setSenderId(orderItem.getCookId());
+            notification.setRestaurantId(order.getRestaurantId());
+            notification.setSticked(false);
+            notification.setReceiverType(2);
+            notification.setTitle("订单项取消");
+            notification.setContent(order.getTableId().toString() + "号餐桌取消了订单项(" +
+                    dish.getName() + " " + orderItem.getAmount() + " 份)，请注意查看");
+            notificationService.addNotification(notification);
+        }
         orderItemMapper.updateOrderItem(orderItem);
         return ResultMap.success(null);
     }
