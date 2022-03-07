@@ -14,6 +14,7 @@ public class Account {
     private Integer id;
     private String username;
     private Integer position;
+    private String idCard;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private Integer restaurantId;
