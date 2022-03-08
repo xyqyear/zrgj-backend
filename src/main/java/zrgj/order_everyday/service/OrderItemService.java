@@ -56,7 +56,7 @@ public class OrderItemService {
                     dish.getName() + ")已烹饪完成，请尽快送餐到桌！！");
             notificationService.addNotification(notification);
         }
-        // 1 =》 -1 订单项取消
+        // 1 => -1 订单项取消
         if (oi.getState() == 1 && orderItem.getState() == -1) {
             Order order = orderMapper.getOrderById(oi.getOrderId());
             Dish dish = dishMapper.getDishById(oi.getDishId());
