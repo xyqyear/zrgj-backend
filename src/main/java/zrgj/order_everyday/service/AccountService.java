@@ -55,10 +55,10 @@ public class AccountService {
         if (user == null) {
             return ResultMap.failure("invalid id");
         }
-        if (account.getPassword() != null) {
-            account.setPassword(Encryption.getSHA256(account.getPassword()));
-        } else {
+        if (account.getPassword() == null || account.getPassword().equals("")) {
             account.setPassword(user.getPassword());
+        } else {
+            account.setPassword(Encryption.getSHA256(account.getPassword()));
         }
         accountMapper.updateAccount(account);
         return ResultMap.success(null);
