@@ -18,6 +18,7 @@
         update account
         set position=#{position},
             username=#{username},
+            password=#{password},
             avatar_url=#{avatarUrl},
             telephone=#{telephone},
             id_card=#{idCard}

@@ -51,6 +51,15 @@ public class AccountService {
     }
 
     public ResultMap updateAccount(Account account) {
+        Account user = accountMapper.getAccountById(account.getId());
+        if (user == null) {
+            return ResultMap.failure("invalid id");
+        }
+        if (account.getPassword() == null || account.getPassword().equals("")) {
+            account.setPassword(user.getPassword());
+        } else {
+            account.setPassword(Encryption.getSHA256(account.getPassword()));
+        }
         accountMapper.updateAccount(account);
         return ResultMap.success(null);
     }
