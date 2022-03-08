@@ -35,15 +35,19 @@ public class OrderItemService {
     }
 
     // update order item
-    public ResultMap updateOrderItem(OrderItem orderItem) {
+    public ResultMap updateOrderItem(OrderItem orderItem, Integer userId) {
         OrderItem oi = orderItemMapper.getOrderItemById(orderItem.getId());
         // 生成订单项状态修改给对应的群体
+        // 1 =》 2 开始烹饪
+        if (oi.getState() == 1 && orderItem.getState() == 2) {
+            orderItem.setCookId(userId);
+        }
         // 2 =》 0 烹饪完成
         if (oi.getState() == 2 && orderItem.getState() == 0) {
-            Order order = orderMapper.getOrderById(orderItem.getOrderId());
-            Dish dish = dishMapper.getDishById(orderItem.getDishId());
+            Order order = orderMapper.getOrderById(oi.getOrderId());
+            Dish dish = dishMapper.getDishById(oi.getDishId());
             Notification notification = new Notification();
-            notification.setSenderId(orderItem.getCookId());
+            notification.setSenderId(userId);
             notification.setRestaurantId(order.getRestaurantId());
             notification.setSticked(false);
             notification.setReceiverType(1);
@@ -53,11 +57,11 @@ public class OrderItemService {
             notificationService.addNotification(notification);
         }
         // 1 =》 -1 订单项取消
-        if (oi.getState() == 2 && orderItem.getState() == 0) {
+        if (oi.getState() == 1 && orderItem.getState() == -1) {
             Order order = orderMapper.getOrderById(orderItem.getOrderId());
             Dish dish = dishMapper.getDishById(orderItem.getDishId());
             Notification notification = new Notification();
-            notification.setSenderId(orderItem.getCookId());
+            notification.setSenderId(userId);
             notification.setRestaurantId(order.getRestaurantId());
             notification.setSticked(false);
             notification.setReceiverType(2);
