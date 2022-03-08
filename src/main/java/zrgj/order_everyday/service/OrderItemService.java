@@ -58,8 +58,8 @@ public class OrderItemService {
         }
         // 1 =》 -1 订单项取消
         if (oi.getState() == 1 && orderItem.getState() == -1) {
-            Order order = orderMapper.getOrderById(orderItem.getOrderId());
-            Dish dish = dishMapper.getDishById(orderItem.getDishId());
+            Order order = orderMapper.getOrderById(oi.getOrderId());
+            Dish dish = dishMapper.getDishById(oi.getDishId());
             Notification notification = new Notification();
             notification.setSenderId(userId);
             notification.setRestaurantId(order.getRestaurantId());
