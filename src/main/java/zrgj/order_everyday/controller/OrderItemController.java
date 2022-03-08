@@ -21,8 +21,9 @@ public class OrderItemController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Object> updateOrderItem(@RequestBody OrderItem orderItem) {
-        return ResponseWrapper.wrap(orderItemService.updateOrderItem(orderItem));
+    public ResponseEntity<Object> updateOrderItem(@RequestBody OrderItem orderItem, @RequestHeader("Authorization") String token) {
+        int userId = JWTUtil.getClaimsFromHeader(token).get("userId").asInt();
+        return ResponseWrapper.wrap(orderItemService.updateOrderItem(orderItem, userId));
     }
 
     @PostMapping("/delete")
