@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="zrgj.order_everyday.mapper.RestaurantMapper">
+    <resultMap id="restaurantMap" type="zrgj.order_everyday.entity.Restaurant">
+        <result property="tableInfo" column="table_info"
+                typeHandler="zrgj.order_everyday.handler.JacksonTypeHandler"/>
+        <result property="queueStatus" column="queue_status"
+                typeHandler="zrgj.order_everyday.handler.JacksonTypeHandler"/>
+    </resultMap>
 
+    <select id="getRestaurantById" parameterType="java.lang.Integer" resultMap="restaurantMap">
+        select *
+        from restaurant
+        where id = #{id}
+    </select>
 
+    <update id="updateRestaurant" parameterType="zrgj.order_everyday.entity.Restaurant">
+        update restaurant
+        set name = #{name},
+            address = #{address},
+            telephone = #{telephone},
+            table_num = #{tableNum},
+            table_info = #{tableInfo,typeHandler=zrgj.order_everyday.handler.JacksonTypeHandler}
+        where id = #{id}
+    </update>
+
+    <update id="updateRestaurantQueueStatus" parameterType="zrgj.order_everyday.entity.Restaurant">
+        update restaurant
+        set queue_status = #{queueStatus,typeHandler=zrgj.order_everyday.handler.JacksonTypeHandler}
+        where id = #{id}
+    </update>
 
 </mapper>
