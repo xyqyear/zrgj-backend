@@ -1,5 +1,6 @@
 package zrgj.order_everyday.mapper;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -9,9 +10,9 @@ import zrgj.order_everyday.entity.Restaurant;
 @Mapper
 @Repository
 public interface RestaurantMapper {
-    @Select("SELECT * FROM `restaurant` WHERE `id` = #{id}")
     Restaurant getRestaurantById(Integer id);
 
-    @Update("UPDATE `restaurant` SET `name` = #{name}, `address` = #{address}, `telephone` = #{telephone}, `table_num` = #{tableNum} WHERE `id` = #{id}")
-    void updateRestaurant(Restaurant restaurant);
+    Integer updateRestaurant(Restaurant restaurant);
+
+    Integer updateRestaurantQueueStatus(Restaurant restaurant);
 }

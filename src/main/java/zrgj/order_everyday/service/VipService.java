@@ -42,7 +42,6 @@ public class VipService {
         if(member == null){
             return ResultMap.failure("vip doesn't exist");
         }
-        vip.setScore(member.getScore()+ vip.getScore());
         if (vip.getScore() < 0) {
             return ResultMap.failure("invalid score");
         }

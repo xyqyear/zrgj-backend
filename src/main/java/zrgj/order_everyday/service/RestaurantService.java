@@ -23,10 +23,13 @@ public class RestaurantService {
     }
 
     public ResultMap getRestaurantQueueStatus(Integer restaurantId) {
-        return ResultMap.success(null);
+        return ResultMap.success(restaurantMapper.getRestaurantById(restaurantId).getQueueStatus());
     }
 
     public ResultMap updateRestaurantQueueStatus(Integer restaurantId, JsonNode queueStatus) {
+        Restaurant restaurant = restaurantMapper.getRestaurantById(restaurantId);
+        restaurant.setQueueStatus(queueStatus);
+        restaurantMapper.updateRestaurantQueueStatus(restaurant);
         return ResultMap.success(null);
     }
 }
