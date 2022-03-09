@@ -1,6 +1,7 @@
 package zrgj.order_everyday.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import zrgj.order_everyday.entity.Dish;
 import zrgj.order_everyday.entity.Notification;
@@ -28,6 +29,9 @@ public class OrderItemService {
     @Autowired
     OrderMapper orderMapper;
 
+    @Autowired
+    private SimpMessagingTemplate template;
+
     // get uncompleted order items
     public ResultMap getUncompletedOrderItems(Integer restaurantId) {
         List<OrderItem> orderItems = orderItemMapper.getUncompletedOrderItems(restaurantId);
@@ -35,7 +39,7 @@ public class OrderItemService {
     }
 
     // update order item
-    public ResultMap updateOrderItem(OrderItem orderItem, Integer userId) {
+    public ResultMap updateOrderItem(OrderItem orderItem, Integer userId, Integer restaurantId) {
         OrderItem oi = orderItemMapper.getOrderItemById(orderItem.getId());
         // 生成订单项状态修改给对应的群体
         // 1 =》 2 开始烹饪
@@ -48,7 +52,7 @@ public class OrderItemService {
             Dish dish = dishMapper.getDishById(oi.getDishId());
             Notification notification = new Notification();
             notification.setSenderId(userId);
-            notification.setRestaurantId(order.getRestaurantId());
+            notification.setRestaurantId(restaurantId);
             notification.setSticked(false);
             notification.setReceiverType(1);
             notification.setTitle("请送餐到桌");
@@ -62,7 +66,7 @@ public class OrderItemService {
             Dish dish = dishMapper.getDishById(oi.getDishId());
             Notification notification = new Notification();
             notification.setSenderId(userId);
-            notification.setRestaurantId(order.getRestaurantId());
+            notification.setRestaurantId(restaurantId);
             notification.setSticked(false);
             notification.setReceiverType(2);
             notification.setTitle("订单项取消");
@@ -71,20 +75,22 @@ public class OrderItemService {
             notificationService.addNotification(notification);
         }
         orderItemMapper.updateOrderItem(orderItem);
+        this.template.convertAndSend("/orders/" + restaurantId, orderMapper.getOngoingOrders(restaurantId));
         return ResultMap.success(null);
     }
 
     // delete order item
-    public ResultMap deleteOrderItem(OrderItem orderItem) {
+    public ResultMap deleteOrderItem(OrderItem orderItem, Integer restaurantId) {
         int deletedNum = orderItemMapper.deleteOrderItem(orderItem.getId());
         if (deletedNum < 1) {
             return ResultMap.failure("orderItem " + orderItem.getId() + " not found or already deleted");
         }
+        this.template.convertAndSend("/orders/" + restaurantId, orderMapper.getOngoingOrders(restaurantId));
         return ResultMap.success(null);
     }
 
     // create order item
-    public ResultMap createOrderItem(OrderItem orderItem) {
+    public ResultMap createOrderItem(OrderItem orderItem, Integer restaurantId) {
         if (orderItem.getAmount() < 1) {
             return ResultMap.failure("amount must be positive integer");
         }
@@ -99,6 +105,7 @@ public class OrderItemService {
             return ResultMap.failure("invalid order in this orderItem");
         }
 
+        this.template.convertAndSend("/orders/" + restaurantId, orderMapper.getOngoingOrders(restaurantId));
         return ResultMap.success((null));
     }
 

@@ -1,6 +1,7 @@
 package zrgj.order_everyday.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import zrgj.order_everyday.entity.Order;
@@ -27,6 +28,9 @@ public class OrderService {
     @Autowired
     RestaurantMapper restaurantMapper;
 
+    @Autowired
+    private SimpMessagingTemplate template;
+
     public ResultMap newOrder(Order order, Integer waiterId, Integer restaurantId) {
         Restaurant restaurant = restaurantMapper.getRestaurantById(restaurantId);
         if (order.getTableId() > restaurant.getTableNum()) {
@@ -51,7 +55,7 @@ public class OrderService {
             }
             i++;
         }
-
+        this.template.convertAndSend("/orders/" + restaurantId, orderMapper.getOngoingOrders(restaurantId));
         return ResultMap.success(null);
     }
 
@@ -64,11 +68,13 @@ public class OrderService {
         order.setPayTime((int) (System.currentTimeMillis() / 1000));
         orderItemMapper.cancelOrderItemByOrderId(orderId);
         this.updateOrder(order);
+        this.template.convertAndSend("/orders/" + order.getRestaurantId(), orderMapper.getOngoingOrders(order.getRestaurantId()));
         return ResultMap.success(null);
     }
 
     public ResultMap updateOrder(Order order) {
         orderMapper.updateOrder(order);
+        this.template.convertAndSend("/orders/" + order.getRestaurantId(), orderMapper.getOngoingOrders(order.getRestaurantId()));
         return ResultMap.success(null);
     }
 

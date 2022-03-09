@@ -21,19 +21,25 @@ public class OrderItemController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Object> updateOrderItem(@RequestBody OrderItem orderItem, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> updateOrderItem(@RequestBody OrderItem orderItem,
+            @RequestHeader("Authorization") String token) {
         int userId = JWTUtil.getClaimsFromHeader(token).get("userId").asInt();
-        return ResponseWrapper.wrap(orderItemService.updateOrderItem(orderItem, userId));
+        int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
+        return ResponseWrapper.wrap(orderItemService.updateOrderItem(orderItem, userId, restaurantId));
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<Object> deleteOrderItem(@RequestBody OrderItem orderItem) {
-        return ResponseWrapper.wrap(orderItemService.deleteOrderItem(orderItem));
+    public ResponseEntity<Object> deleteOrderItem(@RequestBody OrderItem orderItem,
+            @RequestHeader("Authorization") String token) {
+        int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
+        return ResponseWrapper.wrap(orderItemService.deleteOrderItem(orderItem, restaurantId));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Object> insertOrderItem(@RequestBody OrderItem orderItem) {
-        return ResponseWrapper.wrap(orderItemService.createOrderItem(orderItem));
+    public ResponseEntity<Object> insertOrderItem(@RequestBody OrderItem orderItem,
+            @RequestHeader("Authorization") String token) {
+        int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
+        return ResponseWrapper.wrap(orderItemService.createOrderItem(orderItem, restaurantId));
     }
 
 }

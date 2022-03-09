@@ -20,7 +20,7 @@ public class StompInterceptor implements ChannelInterceptor {
             Map<String, Claim> userInfo = JWTUtil.getClaims(accessor.getUser().getName());
             int position = userInfo.get("position").asInt();
             int restaurantId = userInfo.get("restaurantId").asInt();
-            if (!accessor.getDestination().equals("/notification/" + restaurantId + "/" + position)) {
+            if (!accessor.getDestination().equals("/notification/" + restaurantId + "/" + position) && !accessor.getDestination().equals("/orders/" + restaurantId)) {
                 return null;
             }
         }
