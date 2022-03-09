@@ -1,13 +1,9 @@
 package zrgj.order_everyday.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import zrgj.order_everyday.entity.Restaurant;
 import zrgj.order_everyday.service.RestaurantService;
 import zrgj.order_everyday.util.JWTUtil;
@@ -32,4 +28,17 @@ public class RestaurantController {
         restaurant.setId(restaurantId);
         return ResponseWrapper.wrap(restaurantService.updateRestaurantInfo(restaurant));
     }
+
+    @PostMapping("/queue_status/get")
+    public ResponseEntity<Object> getRestaurantQueueStatus(@RequestHeader("Authorization") String token) {
+        int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
+        return ResponseWrapper.wrap(restaurantService.getRestaurantQueueStatus(restaurantId));
+    }
+
+    @PostMapping("/queue_status/update")
+    public ResponseEntity<Object> updateRestaurantQueueStatus(@RequestHeader("Authorization") String token, @RequestBody JsonNode queueStatus) {
+        int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
+        return ResponseWrapper.wrap(restaurantService.updateRestaurantQueueStatus(restaurantId, queueStatus));
+    }
+
 }

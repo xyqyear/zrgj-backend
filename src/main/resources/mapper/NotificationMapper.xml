@@ -4,11 +4,15 @@
 
     <resultMap id="notificationMap" type="zrgj.order_everyday.entity.Notification">
         <result property="confirmation" column="confirmation"
-                   typeHandler="zrgj.order_everyday.handler.JacksonTypeHandler"/>
+                typeHandler="zrgj.order_everyday.handler.JacksonTypeHandler"/>
     </resultMap>
 
     <select id="getNotificationList" resultMap="notificationMap">
-        select * from notification where restaurant_id=#{restaurantId} and deleted=false
+        select *
+        from notification
+        where restaurant_id = #{restaurantId}
+          and deleted = false
+          and (receiver_type = #{position} or receiver_type = 3)
     </select>
 
     <update id="deleteNotification" parameterType="java.lang.Integer">
@@ -27,8 +31,11 @@
     </update>
 
     <insert id="addNotification" parameterType="zrgj.order_everyday.entity.Notification">
-        insert into notification (create_time, title, content, confirmation, sender_id, receiver_type,restaurant_id)
-        values (#{createTime}, #{title}, #{content}, #{confirmation, typeHandler=zrgj.order_everyday.handler.JacksonTypeHandler}, #{senderId}, #{receiverType},#{restaurantId})
+        insert into notification (create_time, title, content, confirmation, sender_id,
+                                  receiver_type, restaurant_id, sticked)
+        values (#{createTime}, #{title}, #{content},
+                #{confirmation, typeHandler=zrgj.order_everyday.handler.JacksonTypeHandler}, #{senderId},
+                #{receiverType}, #{restaurantId}, #{sticked})
     </insert>
 
     <update id="confirmNotification" parameterType="java.lang.String">
