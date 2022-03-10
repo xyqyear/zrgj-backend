@@ -29,14 +29,16 @@ public class DishController {
     @RequiresRoles("0")
     public ResponseEntity<Object> deleteDish(@RequestBody Map<String, String> body,
             @RequestHeader("Authorization") String token) {
-        return ResponseWrapper.wrap(dishService.deleteDish(body.get("id")));
+        int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
+        return ResponseWrapper.wrap(dishService.deleteDish(body.get("id"), restaurantId));
     }
 
     @PostMapping("/update")
     @RequiresRoles("0")
     public ResponseEntity<Object> updateDish(@RequestBody Dish dish,
             @RequestHeader("Authorization") String token) {
-        return ResponseWrapper.wrap(dishService.updateDish(dish));
+        int restaurantId = JWTUtil.getClaimsFromHeader(token).get("restaurantId").asInt();
+        return ResponseWrapper.wrap(dishService.updateDish(dish, restaurantId));
     }
 
     @PostMapping("list")

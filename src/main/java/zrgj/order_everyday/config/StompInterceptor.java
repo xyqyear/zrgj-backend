@@ -22,7 +22,8 @@ public class StompInterceptor implements ChannelInterceptor {
             int restaurantId = userInfo.get("restaurantId").asInt();
             if (!accessor.getDestination().equals("/notification/" + restaurantId + "/" + position)
                     && !accessor.getDestination().equals("/orders/" + restaurantId)
-                    && !accessor.getDestination().equals("/queue/" + restaurantId)) {
+                    && !accessor.getDestination().equals("/queue/" + restaurantId)
+                    && !accessor.getDestination().equals("/dish/" + restaurantId)) {
                 return null;
             }
         }
