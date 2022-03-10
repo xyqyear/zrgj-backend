@@ -2,6 +2,7 @@ package zrgj.order_everyday.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import zrgj.order_everyday.entity.Restaurant;
 import zrgj.order_everyday.mapper.RestaurantMapper;
@@ -12,6 +13,9 @@ public class RestaurantService {
     
     @Autowired
     RestaurantMapper restaurantMapper;
+    
+    @Autowired
+    private SimpMessagingTemplate template;
 
     public ResultMap getRestaurantInfo(Integer restaurantId) {
         return ResultMap.success(restaurantMapper.getRestaurantById(restaurantId));
@@ -30,6 +34,7 @@ public class RestaurantService {
         Restaurant restaurant = restaurantMapper.getRestaurantById(restaurantId);
         restaurant.setQueueStatus(queueStatus);
         restaurantMapper.updateRestaurantQueueStatus(restaurant);
+        this.template.convertAndSend("/queue/" + restaurantId, queueStatus);
         return ResultMap.success(null);
     }
 }
