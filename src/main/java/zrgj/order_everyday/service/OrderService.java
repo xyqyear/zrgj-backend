@@ -71,7 +71,7 @@ public class OrderService {
         order.setPayTime((int) (System.currentTimeMillis() / 1000));
         orderItemMapper.cancelOrderItemByOrderId(order.getId());
         orderMapper.updateOrder(order);
-        this.template.convertAndSend("/orders/" + order.getRestaurantId(), orderMapper.getOngoingOrders(order.getRestaurantId()));
+        this.template.convertAndSend("/orders/" + oldOrder.getRestaurantId(), orderMapper.getOngoingOrders(oldOrder.getRestaurantId()));
         return ResultMap.success(null);
     }
 
