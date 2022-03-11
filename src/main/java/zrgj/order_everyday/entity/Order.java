@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -20,5 +22,6 @@ public class Order {
     private Integer state;
     private Integer waiterId;
     private Integer restaurantId;
+    private Float actuallyPaid;
     private List<OrderItem> orderItems;
 }

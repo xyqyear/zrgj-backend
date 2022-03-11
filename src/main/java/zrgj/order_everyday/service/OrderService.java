@@ -59,14 +59,17 @@ public class OrderService {
         return ResultMap.success(null);
     }
 
-    public ResultMap checkout(Integer orderId) {
-        Order order = orderMapper.getOrderById(orderId);
-        if (order.getState() == 0) {
-            return ResultMap.failure("order " + orderId + " is already checked out");
+    public ResultMap checkout(Order order) {
+        Order oldOrder = orderMapper.getOrderById(order.getId());
+        if (oldOrder == null) {
+            return ResultMap.failure("this order doesn't exist");
+        }
+        if (oldOrder.getState() == 0) {
+            return ResultMap.failure("order " + order.getId() + " is already checked out");
         }
         order.setState(0);
         order.setPayTime((int) (System.currentTimeMillis() / 1000));
-        orderItemMapper.cancelOrderItemByOrderId(orderId);
+        orderItemMapper.cancelOrderItemByOrderId(order.getId());
         orderMapper.updateOrder(order);
         this.template.convertAndSend("/orders/" + order.getRestaurantId(), orderMapper.getOngoingOrders(order.getRestaurantId()));
         return ResultMap.success(null);

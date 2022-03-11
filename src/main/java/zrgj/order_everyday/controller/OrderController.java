@@ -1,5 +1,6 @@
 package zrgj.order_everyday.controller;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import com.auth0.jwt.interfaces.Claim;
@@ -33,8 +34,8 @@ public class OrderController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<Object> checkout(@RequestBody Map<String, Integer> body) {
-        return ResponseWrapper.wrap(orderService.checkout((Integer) body.get("orderId")));
+    public ResponseEntity<Object> checkout(@RequestBody Order order) {
+        return ResponseWrapper.wrap(orderService.checkout(order));
     }
 
     @PostMapping("/ongoing")

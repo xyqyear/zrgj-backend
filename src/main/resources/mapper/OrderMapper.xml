@@ -10,6 +10,7 @@
         <result property="state" column="order_state"></result>
         <result property="waiterId" column="order_waiter_id"></result>
         <result property="restaurantId" column="order_restaurant_id"></result>
+        <result property="actuallyPaid" column="order_actually_paid"></result>
         <collection property="orderItems" ofType="zrgj.order_everyday.entity.OrderItem">
             <id property="id" column="order_item_id"/>
             <result property="dishId" column="order_item_dish_id"></result>
@@ -29,6 +30,7 @@
                o.state         order_state,
                o.waiter_id     order_waiter_id,
                o.restaurant_id order_restaurant_id,
+               o.actually_paid order_actually_paid,
                oi.id           order_item_id,
                oi.dish_id      order_item_dish_id,
                oi.state        order_item_state,
@@ -48,6 +50,7 @@
                o.state         order_state,
                o.waiter_id     order_waiter_id,
                o.restaurant_id order_restaurant_id,
+               o.actually_paid order_actually_paid,
                oi.id           order_item_id,
                oi.dish_id      order_item_dish_id,
                oi.state        order_item_state,
@@ -68,6 +71,7 @@
                o.state         order_state,
                o.waiter_id     order_waiter_id,
                o.restaurant_id order_restaurant_id,
+               o.actually_paid order_actually_paid,
                oi.id           order_item_id,
                oi.dish_id      order_item_dish_id,
                oi.state        order_item_state,

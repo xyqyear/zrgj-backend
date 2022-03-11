@@ -22,7 +22,7 @@ public interface OrderMapper {
     List<Order> getOngoingOrders(Integer restaurantId);
 
     //update with state and payTime
-    @Update("UPDATE `order` SET `state` = #{state}, `pay_time` = #{payTime} WHERE `id` = #{id}")
+    @Update("UPDATE `order` SET `state` = #{state}, `pay_time` = #{payTime}, `actually_paid`= #{actuallyPaid} WHERE `id` = #{id}")
     void updateOrder(Order order);
 
     List<Order> getOrdersInRange(Integer restaurantId,Integer from, Integer to);
